@@ -5,16 +5,19 @@ public class User {
     private String lastName;
     private String username;
     private String password;
-    private String Permission;
+    private String permission;
 
 
     public User() {
     }
 
-    public User(Integer ID, String username, String password){
+    public User(String firstName, String lastName, String username, String password, String permission){
         super();
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.username = username;
         this.password = password;
+        this.permission = permission;
     }
 
 
@@ -51,10 +54,10 @@ public class User {
     }
 
     public String getPermission() {
-        return Permission;
+        return permission;
     }
 
     public void setPermission(String permission) {
-        Permission = permission;
+        this.permission = permission;
     }
 }

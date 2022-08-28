@@ -1,6 +1,7 @@
 package com.example.homy1.model;
 
 public class User {
+    private Integer ID;
     private String firstName;
     private String lastName;
     private String username;
@@ -11,8 +12,8 @@ public class User {
     public User() {
     }
 
-    public User(String firstName, String lastName, String username, String password, String permission){
-        super();
+    public User(Integer ID, String firstName, String lastName, String username, String password, String permission){
+        this.ID = ID;
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
@@ -60,4 +61,10 @@ public class User {
     public void setPermission(String permission) {
         this.permission = permission;
     }
+
+    @Override
+    public String toString() {
+        return "Employee [id=" + ID + ", firstName=" + firstName + ", lastName=" + lastName + ", username=" + username + ", Permission Level="+ permission + "]";
+    }
+
 }

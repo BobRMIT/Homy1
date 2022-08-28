@@ -1,8 +1,13 @@
 package com.example.homy1.dao;
 
+import com.example.homy1.model.User;
 import org.springframework.stereotype.Repository;
 
-@Repository
-public class UserDao {
+import java.sql.SQLException;
 
+@Repository
+public interface UserDao {
+    void setup() throws SQLException;
+    User createUser(String firstName, String lastName, String username, String password, String permission) throws SQLException;
+    User listUsers();
 }

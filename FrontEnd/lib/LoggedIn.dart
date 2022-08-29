@@ -1,7 +1,27 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:frontend/LoggedUserInfo.dart';
 import 'main.dart' as MainPage;
+import 'package:http/http.dart' as http;
+
 void main() {
   runApp(const MyApp());
+}
+
+Future<void> _GetUserData() async {
+  final Data = await http.get(Uri.parse('http://localhost:8080/TestUser/1'));
+
+  if (Data.statusCode == 200) {
+     print("Collecting User Data");
+
+     //return LoggedUserInfo.fromJson(jsonDecode(Data.body));
+
+  } else {
+    print("Failed to Collect User Data");
+  }
+  //throw Exception('Missing Login');
+
 }
 
 class MyApp extends StatelessWidget {
@@ -10,6 +30,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -32,6 +53,8 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
 
+
+
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
   // how it looks.
@@ -49,6 +72,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+
 
   void _incrementCounter() {
     setState(() {
@@ -75,6 +99,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
     var FrameWidth = MediaQuery.of(context).size.width;
     var FrameHeight = MediaQuery.of(context).size.width;
+
+
+    //LoggedUserInfo Data = _
+    _GetUserData();
+
+
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -87,7 +117,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        //title: const Text("Hello"),
+        title: const Text("Hello"),
       ),
       body: Center(
 

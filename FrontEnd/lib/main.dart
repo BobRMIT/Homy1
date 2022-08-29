@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:frontend/LoggedUserInfo.dart';
 import 'LoggedIn.dart' as Next;
+import 'package:http/http.dart' as http;
 
 void main() {
   runApp(const MyApp());
@@ -7,6 +11,7 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
+
 
   // This widget is the root of your application.
   @override
@@ -61,15 +66,25 @@ class _MyHomePageState extends State<MyHomePage> {
       _counter++;
       _counter = _counter + 2;
     });
-
-
   }
 
-  void _login(){
+  Future<void> _login() async {
+    //final Data = await http.get(Uri.parse('http://localhost:8080/TestUser/1'));
+    try {
+      final Data = await http.get(
+          Uri.parse("http://localhost:8080/TestUser/1"));
+      if (Data.statusCode == 200) {
+        print("Logged in");
+        Next.main();
 
-    print("Logged in");
-    Next.main();
+      } else {
+        print("Failed to log in");
+      }
+    } on Exception catch (_) {
+      throw Exception('Missing Login');
+    }
   }
+
 
   @override
   Widget build(BuildContext context) {

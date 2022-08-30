@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:frontend/LoggedUserInfo.dart';
 import 'main.dart' as MainPage;
 import 'package:http/http.dart' as http;
 
@@ -30,10 +29,11 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-
+    _GetUserData();
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
+
         // This is the theme of your application.
         //
         // Try running your application with "flutter run". You'll see the
@@ -90,7 +90,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _LogOut(){
 
-    print("Logged out");
+    print("Back to menu screen");
     MainPage.main();
   }
 
@@ -102,7 +102,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
 
     //LoggedUserInfo Data = _
-    _GetUserData();
+    //_GetUserData();
 
 
     // This method is rerun every time setState is called, for instance as done

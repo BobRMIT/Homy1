@@ -1,24 +1,39 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:frontend/LoggedUserInfo.dart';
-import 'LogInForm.dart' as loginForm;
+import 'main.dart' as MainPage;
 import 'package:http/http.dart' as http;
 
 void main() {
   runApp(const MyApp());
 }
 
+Future<void> _GetUserData() async {
+  final Data = await http.get(Uri.parse('http://localhost:8080/TestUser/1'));
+
+  if (Data.statusCode == 200) {
+     print("Collecting User Data");
+
+     //return LoggedUserInfo.fromJson(jsonDecode(Data.body));
+
+  } else {
+    print("Failed to Collect User Data");
+  }
+  //throw Exception('Missing Login');
+
+}
+
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
-
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    _GetUserData();
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
+
         // This is the theme of your application.
         //
         // Try running your application with "flutter run". You'll see the
@@ -38,6 +53,8 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
 
+
+
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
   // how it looks.
@@ -56,6 +73,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
+
   void _incrementCounter() {
     setState(() {
       // This call to setState tells the Flutter framework that something has
@@ -66,31 +84,27 @@ class _MyHomePageState extends State<MyHomePage> {
       _counter++;
       _counter = _counter + 2;
     });
+
+
   }
 
-  Future<void> _login() async {
-    //final Data = await http.get(Uri.parse('http://localhost:8080/TestUser/1'));
-    try {
-      final Data = await http.get(
-          Uri.parse("http://localhost:8080/"));
-      if (Data.statusCode == 200) {
-        print("BackEnd Active");
-        loginForm.main();
+  void _BackToMenu(){
 
-      } else {
-        print("Failed to connect to API, status: ${Data.statusCode}");
-      }
-    } on Exception catch (_) {
-      throw Exception('Failed to connect to API');
-    }
+    print("Back to menu screen");
+    MainPage.main();
   }
-
 
   @override
   Widget build(BuildContext context) {
 
     var FrameWidth = MediaQuery.of(context).size.width;
     var FrameHeight = MediaQuery.of(context).size.width;
+
+
+    //LoggedUserInfo Data = _
+    //_GetUserData();
+
+
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -103,7 +117,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        //title: const Text("Hello"),
+        title: const Text("Hello"),
       ),
       body: Center(
 
@@ -128,22 +142,43 @@ class _MyHomePageState extends State<MyHomePage> {
           // center the children vertically; the main axis here is the vertical
           // axis because Columns are vertical (the cross axis would be
           // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
 
-            const Text(
-              'hello\nYou have pushed the button this many times:',
-            ),
             Text(
               '$_counter',
               style: Theme.of(context).textTheme.headline4,
             ),
 
-            SizedBox(height: FrameHeight*0.2),
+            //SizedBox(height: FrameHeight*0.2),
+            SizedBox(height: FrameHeight*0.1),
+
+            TextFormField(
+
+                keyboardType: TextInputType.emailAddress, // Use email input type for emails.
+                decoration: const InputDecoration(
+                    contentPadding: EdgeInsets.symmetric(horizontal: 40.0),
+                    hintText: 'you@example.com',
+                    labelText: 'E-mail Address'
+                ),
+            ),
+
+            TextFormField(
+
+              keyboardType: TextInputType.emailAddress, // Use email input type for emails.
+              decoration: const InputDecoration(
+                  contentPadding: EdgeInsets.symmetric(horizontal: 40.0),
+                  hintText: 'Password',
+                  labelText: 'Password'
+              ),
+            ),
+
+
+            SizedBox(height: FrameHeight*0.1),
 
             ElevatedButton(
 
-              onPressed: () {},
+              //onPressed: print("Login in attempt"),
               style: ElevatedButton.styleFrom(
                   fixedSize: Size(FrameWidth * 0.6, FrameHeight*0.1),
                   primary: Colors.blue,
@@ -153,26 +188,26 @@ class _MyHomePageState extends State<MyHomePage> {
                       fontSize: 20,
                       fontWeight: FontWeight.bold)
               ),
-              child: const Text('Sign Up'),
+              onPressed: () { print("Login in attempt"); },
+              child: const Text('Log In'),
             ),
-
 
             SizedBox(height: FrameHeight*0.1),
 
 
             ElevatedButton(
 
-              onPressed: _login,
+              onPressed: _BackToMenu,
               style: ElevatedButton.styleFrom(
                   fixedSize: Size(FrameWidth * 0.6, FrameHeight*0.1),
                   primary: Colors.blue,
                   onPrimary: Colors.black,
-                  padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
                   textStyle: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold)
               ),
-              child: const Text('Login'),
+              child: const Text('Back'),
             ),
 
           ],

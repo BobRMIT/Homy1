@@ -9,5 +9,6 @@ import java.sql.SQLException;
 public interface UserDao {
     void setup() throws SQLException;
     User createUser(String firstName, String lastName, String username, String password, String permission) throws SQLException;
+    User getUser(String username, String password) throws SQLException;
     User listUsers();
 }

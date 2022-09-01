@@ -1,25 +1,29 @@
 package com.example.homy1.model;
 
+import com.example.homy1.dao.UserDao;
+import com.example.homy1.dao.UserDaoImpl;
+
+import java.sql.SQLException;
+
 public class User {
-    private Integer ID;
     private String firstName;
     private String lastName;
     private String username;
     private String password;
     private String permission;
 
-
     public User() {
+
     }
 
-    public User(Integer ID, String firstName, String lastName, String username, String password, String permission){
-        this.ID = ID;
+    public User(String firstName, String lastName, String username, String password, String permission){
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
         this.password = password;
         this.permission = permission;
     }
+
 
 
     public String getFirstName() {
@@ -64,7 +68,7 @@ public class User {
 
     @Override
     public String toString() {
-        return "Employee [id=" + ID + ", firstName=" + firstName + ", lastName=" + lastName + ", username=" + username + ", Permission Level="+ permission + "]";
+        return "FirstName=" + firstName + ", lastName=" + lastName + ", username=" + username + ", Permission Level="+ permission + "]";
     }
 
 }

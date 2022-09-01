@@ -22,7 +22,7 @@ public class UserDaoImpl implements UserDao {
     }
     @Override
     public User createUser(String firstName, String lastName, String username, String password, String permission) throws SQLException {
-        String sql = "SELECT * FROM " + TABLE_NAME + " WHERE username = ? AND password = ? AND firstName = ? AND lastName = ? AND permission = ?";
+        String sql = "INSERT INTO " + TABLE_NAME + " (username, firstName)WHERE username = ? AND password = ? AND firstName = ? AND lastName = ? AND permission = ?";
         try (Connection connection = Database.getConnection();
              PreparedStatement stmt = connection.prepareStatement(sql);) {
             stmt.setString(1, username);
@@ -46,6 +46,7 @@ public class UserDaoImpl implements UserDao {
         }
     }
     @Override
+<<<<<<< Updated upstream
     public User getUser(String username, String password) throws SQLException {
         String sql = "SELECT * FROM " + TABLE_NAME + " WHERE username = ? AND password = ?";
         try (Connection connection = Database.getConnection();
@@ -67,6 +68,18 @@ public class UserDaoImpl implements UserDao {
         }
     }
     @Override
+=======
+    public User updateUser(String firstName, String lastName, String username, String password, String permission) throws SQLException{
+        return null;
+
+    }
+    @Override
+    public boolean removeUser(String username) throws SQLException{
+        return false;
+    }
+
+    @Override
+>>>>>>> Stashed changes
     public User listUsers(){
         return null;
     }

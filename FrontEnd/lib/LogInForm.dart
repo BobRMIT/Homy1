@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'main.dart' as MainPage;
 import 'package:http/http.dart' as http;
+import 'HomePage.dart' as HomePage;
 
 void main() {
   runApp(const MyApp());
@@ -12,15 +13,13 @@ Future<void> _GetUserData() async {
   final Data = await http.get(Uri.parse('http://localhost:8080/TestUser/1'));
 
   if (Data.statusCode == 200) {
-     print("Collecting User Data");
+    print("Collecting User Data");
 
-     //return LoggedUserInfo.fromJson(jsonDecode(Data.body));
-
+    //return LoggedUserInfo.fromJson(jsonDecode(Data.body));
   } else {
     print("Failed to Collect User Data");
   }
   //throw Exception('Missing Login');
-
 }
 
 class MyApp extends StatelessWidget {
@@ -29,7 +28,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    _GetUserData();
+    // _GetUserData();
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -53,56 +52,70 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
 
-
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
   @override
   State<MyHomePage> createState() => _MyHomePageState();
+
+  final String title;
 }
 
+
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  final usernameController = TextEditingController();
+  final passwordController = TextEditingController();
 
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-      _counter = _counter + 2;
-    });
-
-
+  String getUsername() {
+      return usernameController.text;
   }
 
-  void _BackToMenu(){
+  String getPassword() {
+      return passwordController.text;
+  }
 
+   _BackToMenu(){
     print("Back to menu screen");
-    MainPage.main();
+    MainPage.main(); //Going back to menu
   }
+
+  Future<void> _HomeScreen() async {
+    String username = getUsername();
+    String password = getPassword();
+
+    if (username.isNotEmpty) {
+      if (password.isNotEmpty) {
+        try {
+          final Data = await http.get(
+              Uri.parse("http://localhost:8080/search/$username/$password/"));
+          print("1" + Data.body);
+          if (Data.body.isEmpty) {
+            print("User Not Found");
+
+            //login succsessful
+
+          } else {
+            print(Data.body);
+            HomePage.main();
+          }
+        } on Exception catch (_) {
+          throw Exception('Failed to connect to API');
+        }
+      }
+    }
+  }
+
+
+
+
+
+
+
+
 
   @override
   Widget build(BuildContext context) {
 
     var FrameWidth = MediaQuery.of(context).size.width;
     var FrameHeight = MediaQuery.of(context).size.width;
-
-
-    //LoggedUserInfo Data = _
-    //_GetUserData();
 
 
     // This method is rerun every time setState is called, for instance as done
@@ -145,26 +158,21 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
 
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-
             //SizedBox(height: FrameHeight*0.2),
             SizedBox(height: FrameHeight*0.1),
 
             TextFormField(
-
-                keyboardType: TextInputType.emailAddress, // Use email input type for emails.
-                decoration: const InputDecoration(
-                    contentPadding: EdgeInsets.symmetric(horizontal: 40.0),
-                    hintText: 'you@example.com',
-                    labelText: 'E-mail Address'
-                ),
+              controller: usernameController,
+              keyboardType: TextInputType.emailAddress, // Use email input type for emails.
+              decoration: const InputDecoration(
+                  contentPadding: EdgeInsets.symmetric(horizontal: 40.0),
+                  hintText: 'Username',
+                  labelText: 'Username'
+              ),
             ),
 
             TextFormField(
-
+              controller: passwordController,
               keyboardType: TextInputType.emailAddress, // Use email input type for emails.
               decoration: const InputDecoration(
                   contentPadding: EdgeInsets.symmetric(horizontal: 40.0),
@@ -173,12 +181,11 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
 
-
             SizedBox(height: FrameHeight*0.1),
 
             ElevatedButton(
 
-              //onPressed: print("Login in attempt"),
+              onPressed: _HomeScreen,
               style: ElevatedButton.styleFrom(
                   fixedSize: Size(FrameWidth * 0.6, FrameHeight*0.1),
                   primary: Colors.blue,
@@ -188,7 +195,6 @@ class _MyHomePageState extends State<MyHomePage> {
                       fontSize: 20,
                       fontWeight: FontWeight.bold)
               ),
-              onPressed: () { print("Login in attempt"); },
               child: const Text('Log In'),
             ),
 
@@ -213,11 +219,6 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }

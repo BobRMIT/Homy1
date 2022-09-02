@@ -1,26 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'main.dart' as MainPage;
+import 'LogInForm.dart' as LoginPage;
 import 'package:http/http.dart' as http;
 
 void main() {
   runApp(const MyApp());
-}
-
-Future<void> _GetUserData() async {
-  final Data = await http.get(Uri.parse('http://localhost:8080/TestUser/1'));
-
-  if (Data.statusCode == 200) {
-     print("Collecting User Data");
-
-     //return LoggedUserInfo.fromJson(jsonDecode(Data.body));
-
-  } else {
-    print("Failed to Collect User Data");
-  }
-  //throw Exception('Missing Login');
-
 }
 
 class MyApp extends StatelessWidget {
@@ -29,7 +14,6 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    _GetUserData();
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -84,14 +68,11 @@ class _MyHomePageState extends State<MyHomePage> {
       _counter++;
       _counter = _counter + 2;
     });
-
-
   }
 
-  void _LogOut(){
-
-    print("Back to menu screen");
-    MainPage.main();
+  void _BackToLogin() {
+    print("Back to Login screen");
+    LoginPage.main(); //Going back to menu
   }
 
   @override
@@ -127,7 +108,6 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
 
 
-
           // Column is also a layout widget. It takes a list of children and
           // arranges them vertically. By default, it sizes itself to fit its
           // children horizontally, and tries to be as tall as its parent.
@@ -145,37 +125,28 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
 
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
 
-            SizedBox(height: FrameHeight*0.2),
-            SizedBox(height: FrameHeight*0.1),
+            SizedBox(height: FrameHeight * 0.2),
+            SizedBox(height: FrameHeight * 0.1),
 
 
             ElevatedButton(
 
-              onPressed: _LogOut,
+              onPressed: _BackToLogin,
               style: ElevatedButton.styleFrom(
-                  fixedSize: Size(FrameWidth * 0.6, FrameHeight*0.1),
+                  fixedSize: Size(FrameWidth * 0.1, FrameHeight * 0.1),
                   primary: Colors.blue,
                   onPrimary: Colors.black,
-                  padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 20, vertical: 20),
                   textStyle: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold)
+                    fontSize: 20,)
               ),
-              child: const Text('Log out'),
+              child: const Text('B'),
             ),
 
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }

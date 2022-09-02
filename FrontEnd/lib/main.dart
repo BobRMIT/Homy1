@@ -75,7 +75,7 @@ class _MyHomePageState extends State<MyHomePage> {
           Uri.parse("http://localhost:8080/"));
       if (Data.statusCode == 200) {
         print("BackEnd Active");
-        loginForm.main();
+        loginForm.main(); //Next Window
 
       } else {
         print("Failed to connect to API, status: ${Data.statusCode}");

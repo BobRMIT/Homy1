@@ -15,23 +15,26 @@ public class UserDaoImpl implements UserDao {
     public void setup() throws SQLException {
         try (Connection connection = Database.getConnection();
              Statement stmt = connection.createStatement();) {
-            String sql = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + "username VARCHAR(15) NOT NULL," +
-                    "password VARCHAR(10) NOT NULL," + "firstName VARCHAR(15) NOT NULL,"
-                    + "lastName VARCHAR(15) NOT NULL," + "permission VARCHAR(8) NOT NULL," + "PRIMARY KEY (username))";
+            String sql = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + "(id integer not null, username VARCHAR(255) NOT NULL," +
+                    "password VARCHAR(255) NOT NULL," + "firstName VARCHAR(255) NOT NULL,"
+                    + "lastName VARCHAR(255) NOT NULL," + "permission VARCHAR(255) NOT NULL," + "PRIMARY KEY (username))";
             stmt.executeUpdate(sql);
         }
     }
     @Override
-    public User createUser(String firstName, String lastName, String username, String password, String permission) throws SQLException {
-        String sql = "INSERT INTO " + TABLE_NAME + " (username, firstName)WHERE username = ? AND password = ? AND firstName = ? AND lastName = ? AND permission = ?";
+    public User createUser(Integer id, String firstName, String lastName, String username, String password, String permission) throws SQLException {
+        String sql = "INSERT INTO " + TABLE_NAME + " (id, username, password, firstName, lastName, permission) VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection connection = Database.getConnection();
              PreparedStatement stmt = connection.prepareStatement(sql);) {
-            stmt.setString(1, username);
-            stmt.setString(2, password);
-            stmt.setString(3, firstName);
-            stmt.setString(4, lastName);
-            stmt.setString(5, permission);
-            return new User(username, password, firstName, lastName, permission);
+            stmt.setInt(1, id);
+            stmt.setString(2, username);
+            stmt.setString(3, password);
+            stmt.setString(4, firstName);
+            stmt.setString(5, lastName);
+            stmt.setString(6, permission);
+
+            stmt.executeUpdate();
+            return new User(firstName, lastName, username, password, permission);
 
         }
     }

@@ -24,7 +24,6 @@ public class Homy1Application {
     public void setup() throws SQLException {
         userDao = new UserDaoImpl();
         userDao.setup();
-        userDao.createUser("Toe", "Biden", "toebiden123", "abc123", "Admin");
     }
     @RestController
     public class BlogController {
@@ -33,8 +32,32 @@ public class Homy1Application {
         public String index() throws SQLException {
             setup();
             System.out.println("tested");
-            System.out.println(userDao.getUser("toebiden123", "abc123").toString());
-            return "Hello";
+            return "Test 1";
+
+        }
+        @RequestMapping("/create")
+        public String addUser() throws SQLException {
+
+
+            userDao.createUser(1,"Toe","Biden","toeBiden123","abc213", "Admin" );
+
+            return "Test 2";
+
+        }
+        @RequestMapping("/search")
+        public String searchUser() throws SQLException {
+
+            User n = new User();
+            n = userDao.getUser("toeBiden123", "abc123");
+            if(n.toString() == null){
+                System.out.println("No User found");
+            }
+            else{
+                String result = n.toString();
+                System.out.println(result);
+            }
+
+            return "Searching User";
 
         }
     }

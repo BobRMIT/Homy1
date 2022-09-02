@@ -9,7 +9,7 @@ public class Database {
     static String username = "root";
     static String password = "password";
 
-    private static final String DB_URL = "jdbc:mysql://${MYSQL_HOST:localhost}:3306";
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/homy1";
 
     public static Connection getConnection() throws SQLException {
         Properties connectionProps = new Properties();

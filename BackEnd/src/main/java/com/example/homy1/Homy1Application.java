@@ -56,7 +56,6 @@ public class Homy1Application {
 
             }
             return "Test 2";
-
         }
 
         @RequestMapping("/search/{username}/{password}")

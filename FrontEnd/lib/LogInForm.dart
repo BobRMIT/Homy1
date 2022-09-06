@@ -62,54 +62,61 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
-
+  final errorTxtController = TextEditingController();
 
   String getUsername() {
-      return usernameController.text;
+  return usernameController.text;
   }
 
   String getPassword() {
-      return passwordController.text;
+  return passwordController.text;
   }
 
-   _BackToMenu(){
-    print("Back to menu screen");
-    MainPage.main(); //Going back to menu
+  void _setTextState(String error) {
+    setState(() {
+      errorTxtController.text = error;
+    });
   }
 
-  Future<void> _HomeScreen() async {
-    String username = getUsername();
-    String password = getPassword();
-
-    if (username.isNotEmpty) {
-      if (password.isNotEmpty) {
-        try {
-          final Data = await http.get(
-              Uri.parse("http://localhost:8080/search/$username/$password/"));
-          print("1" + Data.body);
-          if (Data.body.isEmpty) {
-            print("User Not Found");
-
-            //login succsessful
-
-          } else {
-            print(Data.body);
-            HomePage.main();
-          }
-        } on Exception catch (_) {
-          throw Exception('Failed to connect to API');
-        }
-      }
+    _BackToMenu() {
+      print("Back to menu screen");
+      MainPage.main(); //Going back to menu
     }
-  }
 
+    Future<void> _HomeScreen() async {
+      String username = getUsername();
+      String password = getPassword();
 
+      if ((username.isNotEmpty) && (password.isNotEmpty)){
+        if ((!username.contains(' ')) && (!password.contains(' '))) {
+          try {
+            final Data = await http.get(
+                Uri.parse("http://localhost:8080/search/$username/$password/"));
+            print("1 " + Data.body);
+            if (Data.body.isEmpty) {
+              _setTextState("Invalid Credentials");
+              print("User Not Found");
 
+              //login succsessful
 
+            } else {
+              print(Data.body);
+              HomePage.main();
+            }
+          } on Exception catch (_) {
+            _setTextState("Failed to connect to API");
+            //throw Exception('Failed to connect to API');
+          }
+        }else {
+          print("Whitespace");
+          _setTextState("Fields Contain Whitespace");
+        }
+      } else {
+          print("Blank");
+          _setTextState("Blank Fields");
+      }
 
-
-
-
+    }
 
   @override
   Widget build(BuildContext context) {
@@ -124,6 +131,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
+
     return Scaffold(
 
 
@@ -161,23 +169,47 @@ class _MyHomePageState extends State<MyHomePage> {
             //SizedBox(height: FrameHeight*0.2),
             SizedBox(height: FrameHeight*0.1),
 
-            TextFormField(
-              controller: usernameController,
-              keyboardType: TextInputType.emailAddress, // Use email input type for emails.
-              decoration: const InputDecoration(
-                  contentPadding: EdgeInsets.symmetric(horizontal: 40.0),
-                  hintText: 'Username',
-                  labelText: 'Username'
-              ),
+            SizedBox(
+            width: FrameWidth * 0.7,
+
+            child: TextFormField(
+                  controller: usernameController,
+                  keyboardType: TextInputType.emailAddress, // Use email input type for emails.
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      hintText: 'Username',
+                      labelText: 'Username'
+                  ),
+                ),
             ),
 
-            TextFormField(
-              controller: passwordController,
-              keyboardType: TextInputType.emailAddress, // Use email input type for emails.
-              decoration: const InputDecoration(
-                  contentPadding: EdgeInsets.symmetric(horizontal: 40.0),
-                  hintText: 'Password',
-                  labelText: 'Password'
+            SizedBox(height: FrameHeight*0.03),
+
+            SizedBox(
+              width: FrameWidth * 0.7,
+              child: TextFormField(
+                controller: passwordController,
+                keyboardType: TextInputType.emailAddress, // Use email input type for emails.
+                decoration: InputDecoration(
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                    contentPadding: EdgeInsets.symmetric(horizontal: 20.0),
+                    hintText: 'Password',
+                    labelText: 'Password'
+                ),
+              ),
+
+            ),
+
+            SizedBox(height: FrameHeight*0.03),
+
+          Align( alignment: const Alignment(-0.6,-1),
+            child:
+            SizedBox(
+
+                child: Text(errorTxtController.text,
+                  style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.red),
+                ),
               ),
             ),
 
@@ -198,7 +230,7 @@ class _MyHomePageState extends State<MyHomePage> {
               child: const Text('Log In'),
             ),
 
-            SizedBox(height: FrameHeight*0.1),
+            SizedBox(height: FrameHeight*0.05),
 
 
             ElevatedButton(
@@ -215,7 +247,6 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               child: const Text('Back'),
             ),
-
           ],
         ),
       ),

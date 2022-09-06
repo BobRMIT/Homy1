@@ -54,6 +54,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+
+  final errorTxtController = TextEditingController();
+
   int _counter = 0;
 
   void _incrementCounter() {
@@ -68,6 +71,13 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  void _setTextState(String error){
+    setState((){
+
+      errorTxtController.text = error;
+    });
+  }
+
   Future<void> _login() async {
     //final Data = await http.get(Uri.parse('http://localhost:8080/TestUser/1'));
     try {
@@ -78,9 +88,12 @@ class _MyHomePageState extends State<MyHomePage> {
         loginForm.main(); //Next Window
 
       } else {
+        _setTextState("Failed to connect to API, status: ${Data.statusCode}");
         print("Failed to connect to API, status: ${Data.statusCode}");
       }
     } on Exception catch (_) {
+      _setTextState("Failed to connect to API");
+      //errorTxtController.text = "Failed to connect to API";
       throw Exception('Failed to connect to API');
     }
   }
@@ -175,6 +188,12 @@ class _MyHomePageState extends State<MyHomePage> {
               child: const Text('Login'),
             ),
 
+            SizedBox(height: FrameHeight*0.05),
+
+            Text(
+                errorTxtController.text,
+                style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.red),
+            ),
           ],
         ),
       ),

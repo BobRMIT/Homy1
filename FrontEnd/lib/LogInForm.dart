@@ -161,25 +161,54 @@ class _MyHomePageState extends State<MyHomePage> {
             //SizedBox(height: FrameHeight*0.2),
             SizedBox(height: FrameHeight*0.1),
 
-            TextFormField(
-              controller: usernameController,
-              keyboardType: TextInputType.emailAddress, // Use email input type for emails.
-              decoration: const InputDecoration(
-                  contentPadding: EdgeInsets.symmetric(horizontal: 40.0),
-                  hintText: 'Username',
-                  labelText: 'Username'
+            // TextFormField( OLD UI
+            //   controller: usernameController,
+            //   keyboardType: TextInputType.emailAddress, // Use email input type for emails.
+            //   decoration: const InputDecoration(
+            //       contentPadding: EdgeInsets.symmetric(horizontal: 40.0),
+            //       hintText: 'Username',
+            //       labelText: 'Username'
+            //   ),
+            // ),
+            Container(
+              padding: const EdgeInsets.all(10),
+              child: TextField(
+                controller: usernameController,
+                keyboardType: TextInputType.emailAddress, // Use email input type for emails.
+                decoration: const InputDecoration(
+                  // contentPadding: EdgeInsets.symmetric(horizontal: 40.0),
+                    border: OutlineInputBorder(),
+                    hintText: 'Username',
+                    labelText: 'Username' //RENAME TO EMAI ADDRESSL?
+              ),
+            ),
+            ),
+
+            // TextFormField( OLD PASSWORD BOX
+            //   controller: passwordController,
+            //   keyboardType: TextInputType.emailAddress, // Use email input type for emails.
+            //   decoration: const InputDecoration(
+            //       contentPadding: EdgeInsets.symmetric(horizontal: 40.0),
+            //       hintText: 'Password',
+            //       labelText: 'Password'
+            //   ),
+            // ),
+
+            Container(
+              padding: const EdgeInsets.all(10),
+              child: TextField(
+                obscureText: true, // TO HIDE PASSWORD
+                controller: passwordController,
+                keyboardType: TextInputType.emailAddress, // Use email input type for emails.
+                decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: 'Password',
+                    labelText: 'Password'
+              ),
               ),
             ),
 
-            TextFormField(
-              controller: passwordController,
-              keyboardType: TextInputType.emailAddress, // Use email input type for emails.
-              decoration: const InputDecoration(
-                  contentPadding: EdgeInsets.symmetric(horizontal: 40.0),
-                  hintText: 'Password',
-                  labelText: 'Password'
-              ),
-            ),
+
 
             SizedBox(height: FrameHeight*0.1),
 

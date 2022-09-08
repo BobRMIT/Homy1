@@ -56,6 +56,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  int currentPageIndex = 0;
 
 
   void _incrementCounter() {
@@ -69,6 +70,8 @@ class _MyHomePageState extends State<MyHomePage> {
       _counter = _counter + 2;
     });
   }
+
+
 
   void _BackToLogin() {
     print("Back to Login screen");
@@ -93,6 +96,63 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
+      bottomNavigationBar: NavigationBar(
+        onDestinationSelected: (int index) {
+          setState(() {
+            currentPageIndex = index;
+          });
+        },
+        selectedIndex: currentPageIndex,
+        destinations: const <Widget>[
+          NavigationDestination(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.chat_bubble),
+            label: 'Chat',
+          ),
+          NavigationDestination(
+            selectedIcon: Icon(Icons.notifications),
+            icon: Icon(Icons.notification_add),
+            label: 'Notifications',
+          ),
+        ],
+      ),
+      body: <Widget>[
+        // SizedBox(height: FrameHeight * 0.2),
+        // SizedBox(height: FrameHeight * 0.1),
+        //
+        // ElevatedButton(
+        //
+        //   onPressed: _BackToLogin,
+        //   style: ElevatedButton.styleFrom(
+        //       fixedSize: Size(FrameWidth * 0.1, FrameHeight * 0.1),
+        //       primary: Colors.blue,
+        //       onPrimary: Colors.black,
+        //       padding: const EdgeInsets.symmetric(
+        //           horizontal: 20, vertical: 20),
+        //       textStyle: const TextStyle(
+        //         fontSize: 20,)
+        //   ),
+        //   child: const Text('B'),
+        // ),
+        Container(
+          // color: Colors.red,
+          alignment: Alignment.center,
+          child: const Text('Home page'),
+        ),
+        Container(
+          // color: Colors.green,
+          alignment: Alignment.center,
+          child: const Text('chat page'),
+        ),
+        Container(
+          // color: Colors.blue,
+          alignment: Alignment.center,
+          child: const Text('notifications page'),
+        ),
+      ][currentPageIndex],
 
 
       appBar: AppBar(
@@ -100,54 +160,54 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: const Text("Hello"),
       ),
-      body: Center(
 
-
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-
-
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-
-
-            SizedBox(height: FrameHeight * 0.2),
-            SizedBox(height: FrameHeight * 0.1),
-
-
-            ElevatedButton(
-
-              onPressed: _BackToLogin,
-              style: ElevatedButton.styleFrom(
-                  fixedSize: Size(FrameWidth * 0.1, FrameHeight * 0.1),
-                  primary: Colors.blue,
-                  onPrimary: Colors.black,
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 20, vertical: 20),
-                  textStyle: const TextStyle(
-                    fontSize: 20,)
-              ),
-              child: const Text('B'),
-            ),
-
-          ],
-        ),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      // bottomSheet: Center(
+      //
+      //
+      //   // Center is a layout widget. It takes a single child and positions it
+      //   // in the middle of the parent.
+      //   child: Column(
+      //
+      //
+      //     // Column is also a layout widget. It takes a list of children and
+      //     // arranges them vertically. By default, it sizes itself to fit its
+      //     // children horizontally, and tries to be as tall as its parent.
+      //     //
+      //     // Invoke "debug painting" (press "p" in the console, choose the
+      //     // "Toggle Debug Paint" action from the Flutter Inspector in Android
+      //     // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
+      //     // to see the wireframe for each widget.
+      //     //
+      //     // Column has various properties to control how it sizes itself and
+      //     // how it positions its children. Here we use mainAxisAlignment to
+      //     // center the children vertically; the main axis here is the vertical
+      //     // axis because Columns are vertical (the cross axis would be
+      //     // horizontal).
+      //     mainAxisAlignment: MainAxisAlignment.center,
+      //     children: <Widget>[
+      //
+      //
+      //       SizedBox(height: FrameHeight * 0.2),
+      //       SizedBox(height: FrameHeight * 0.1),
+      //
+      //       ElevatedButton(
+      //
+      //         onPressed: _BackToLogin,
+      //         style: ElevatedButton.styleFrom(
+      //             fixedSize: Size(FrameWidth * 0.1, FrameHeight * 0.1),
+      //             primary: Colors.blue,
+      //             onPrimary: Colors.black,
+      //             padding: const EdgeInsets.symmetric(
+      //                 horizontal: 20, vertical: 20),
+      //             textStyle: const TextStyle(
+      //               fontSize: 20,)
+      //         ),
+      //         child: const Text('B'),
+      //       ),
+      //
+      //     ],
+      //   ),
+      // ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }

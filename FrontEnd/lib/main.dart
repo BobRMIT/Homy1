@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:frontend/LoggedUserInfo.dart';
 import 'LogInForm.dart' as loginForm;
 import 'package:http/http.dart' as http;
+import 'signupForm.dart' as signupForm;
+
 
 void main() {
   runApp(const MyApp());
@@ -56,6 +58,11 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
+  _ToSignup(){
+    print("To  signup form");
+    signupForm.main(); //Going back to menu
+  }
+
   void _incrementCounter() {
     setState(() {
       // This call to setState tells the Flutter framework that something has
@@ -84,6 +91,8 @@ class _MyHomePageState extends State<MyHomePage> {
       throw Exception('Failed to connect to API');
     }
   }
+
+
 
 
   @override
@@ -143,7 +152,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
             ElevatedButton(
 
-              onPressed: () {},
+              // onPressed: () {},
+              onPressed: _ToSignup,
               style: ElevatedButton.styleFrom(
                   fixedSize: Size(FrameWidth * 0.6, FrameHeight*0.1),
                   primary: Colors.blue,

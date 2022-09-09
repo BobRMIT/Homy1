@@ -62,6 +62,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
+  final errorTxtController = TextEditingController();
 
 
   String getUsername() {
@@ -70,6 +71,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
   String getPassword() {
       return passwordController.text;
+  }
+
+  void _setTextState(String error) {
+    setState(() {
+      errorTxtController.text = error;
+    });
   }
 
    _BackToMenu(){
@@ -81,13 +88,14 @@ class _MyHomePageState extends State<MyHomePage> {
     String username = getUsername();
     String password = getPassword();
 
-    if (username.isNotEmpty) {
-      if (password.isNotEmpty) {
+    if ((username.isNotEmpty) && (password.isNotEmpty)){
+      if ((!username.contains(' ')) && (!password.contains(' '))) {
         try {
           final Data = await http.get(
               Uri.parse("http://localhost:8080/search/$username/$password/"));
-          print("1" + Data.body);
+          print("1 " + Data.body);
           if (Data.body.isEmpty) {
+            _setTextState("Invalid Credentials");
             print("User Not Found");
 
             //login succsessful
@@ -97,18 +105,19 @@ class _MyHomePageState extends State<MyHomePage> {
             HomePage.main();
           }
         } on Exception catch (_) {
-          throw Exception('Failed to connect to API');
+          _setTextState("Failed to connect to API");
+          //throw Exception('Failed to connect to API');
         }
+      }else {
+        print("Whitespace");
+        _setTextState("Fields Contain Whitespace");
       }
+    } else {
+      print("Blank");
+      _setTextState("Blank Fields");
     }
+
   }
-
-
-
-
-
-
-
 
 
   @override

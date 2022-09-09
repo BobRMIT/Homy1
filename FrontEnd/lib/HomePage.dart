@@ -120,23 +120,23 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
       body: <Widget>[
-        // SizedBox(height: FrameHeight * 0.2),
-        // SizedBox(height: FrameHeight * 0.1),
-        //
-        // ElevatedButton(
-        //
-        //   onPressed: _BackToLogin,
-        //   style: ElevatedButton.styleFrom(
-        //       fixedSize: Size(FrameWidth * 0.1, FrameHeight * 0.1),
-        //       primary: Colors.blue,
-        //       onPrimary: Colors.black,
-        //       padding: const EdgeInsets.symmetric(
-        //           horizontal: 20, vertical: 20),
-        //       textStyle: const TextStyle(
-        //         fontSize: 20,)
-        //   ),
-        //   child: const Text('B'),
-        // ),
+        SizedBox(height: FrameHeight * 0.2),
+        SizedBox(height: FrameHeight * 0.1),
+
+        ElevatedButton(
+
+          onPressed: _BackToLogin,
+          style: ElevatedButton.styleFrom(
+              fixedSize: Size(FrameWidth * 0.1, FrameHeight * 0.1),
+              primary: Colors.blue,
+              onPrimary: Colors.black,
+              padding: const EdgeInsets.symmetric(
+                  horizontal: 20, vertical: 20),
+              textStyle: const TextStyle(
+                fontSize: 20,)
+          ),
+          child: const Text('B'),
+        ),
         Container(
           // color: Colors.red,
           alignment: Alignment.center,

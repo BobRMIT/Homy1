@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:frontend/LoggedUserInfo.dart';
 import 'LogInForm.dart' as loginForm;
 import 'package:http/http.dart' as http;
 import 'signupForm.dart' as signupForm;
@@ -85,14 +84,22 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  Future<void> _login() async {
+  //Mode 1 - Login, Mode 0 - Signup
+  Future<void> _loginSignup(int mode) async {
     //final Data = await http.get(Uri.parse('http://localhost:8080/TestUser/1'));
     try {
       final Data = await http.get(
           Uri.parse("http://localhost:8080/"));
       if (Data.statusCode == 200) {
         print("BackEnd Active");
-        loginForm.main(); //Next Window
+        if (mode == 1){
+          loginForm.main();
+          //Next Window
+        }
+        else if (mode == 0){
+          signupForm.main();
+        }
+
 
       } else {
         _setTextState("Failed to connect to API, status: ${Data.statusCode}");
@@ -154,19 +161,19 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
 
             const Text(
-              'hello\nYou have pushed the button this many times:',
+              "Lorem ipsum Temp Image\n"
+                  "Logo here in the future?"
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
+            Image.asset("images/LogoTemp.jpg",height: 200,
+              width: 400,),
 
-            SizedBox(height: FrameHeight*0.2),
+
+            SizedBox(height: FrameHeight*0.1),
 
             ElevatedButton(
 
               // onPressed: () {},
-              onPressed: _ToSignup,
+              onPressed: () => _loginSignup(0),
               style: ElevatedButton.styleFrom(
                   fixedSize: Size(FrameWidth * 0.6, FrameHeight*0.1),
                   primary: Colors.blue,
@@ -185,7 +192,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
             ElevatedButton(
 
-              onPressed: _login,
+              onPressed: () => _loginSignup(1),
               style: ElevatedButton.styleFrom(
                   fixedSize: Size(FrameWidth * 0.6, FrameHeight*0.1),
                   primary: Colors.blue,
@@ -206,11 +213,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }

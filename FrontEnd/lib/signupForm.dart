@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'main.dart' as MainPage;
 import 'package:http/http.dart' as http;
 import 'HomePage.dart' as HomePage;
-import 'LogInForm.dart' as LoginPage;
 
 void main() {
   runApp(const MyApp());
 }
+
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -16,7 +16,6 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    // _GetUserData();
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -52,6 +51,10 @@ class _MyHomePageState extends State<MyHomePage> {
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
   final passwordController = TextEditingController();
+  final errorTxtController = TextEditingController();
+  Color selectionColor = Colors.red;
+
+
 
 
   String getUsername() {
@@ -62,9 +65,74 @@ class _MyHomePageState extends State<MyHomePage> {
     return passwordController.text;
   }
 
+  String getFirstName() {
+    return firstNameController.text;
+  }
+
+  String getLastName() {
+    return lastNameController.text;
+  }
+
+  void _setTextStateError(String error) {
+    setState(() {
+      selectionColor = Colors.red;
+      errorTxtController.text = error;
+    });
+  }
+
+  void _setTextStateSuc(String error) {
+    setState(() {
+      selectionColor = Colors.green;
+      errorTxtController.text = error;
+
+    });
+  }
+
+  Color getTextColour() {
+    return selectionColor;
+  }
+
+
   _BackToMenu(){
     print("Back to menu screen");
     MainPage.main(); //Going back to menu
+  }
+
+  Future<void> _SigningUp() async {
+
+    if ((getUsername().isNotEmpty) && (getPassword().isNotEmpty) && (getFirstName().isNotEmpty) && (getLastName().isNotEmpty)){
+      if (!getUsername().contains(' ')){
+        if (!getPassword().contains(' ')){
+          final response = await
+          http.post(
+            Uri.parse('http://localhost:8080/create/'),
+            headers: <String, String>{
+              'Content-Type': 'application/json; charset=UTF-8',
+            },
+            body: jsonEncode(<String, String>{
+              'username': getUsername(),
+              'password': getPassword(),
+              'firstName': getFirstName(),
+              'lastName': getLastName(),
+              'permission': 'User'
+            }),
+          );
+          if (response.body == 'Success') {
+            _setTextStateSuc(response.body);
+          }else {
+            _setTextStateError(response.body);
+          }
+
+        }else{
+          _setTextStateError("Password Contains Whitespace");
+        }
+      }else{
+        _setTextStateError("Username Contains Whitespace");
+      }
+
+    }else{
+      _setTextStateError("Empty Fields");
+    }
   }
 
 
@@ -89,6 +157,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
+
     return Scaffold(
 
 
@@ -190,12 +259,24 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
 
 
+            SizedBox(height: FrameHeight*0.05),
 
-            SizedBox(height: FrameHeight*0.1),
+
+            Align( alignment: const Alignment(-0.9,-1),
+              child:
+              SizedBox(
+
+                child: Text(errorTxtController.text,
+                  style: TextStyle(fontWeight: FontWeight.bold, color: getTextColour()),
+                ),
+              ),
+            ),
+
+            SizedBox(height: FrameHeight*0.05),
 
             ElevatedButton(
 
-              onPressed: _HomeScreen,
+              onPressed: _SigningUp,
               style: ElevatedButton.styleFrom(
                   fixedSize: Size(FrameWidth * 0.6, FrameHeight*0.1),
                   primary: Colors.blue,
@@ -208,7 +289,7 @@ class _MyHomePageState extends State<MyHomePage> {
               child: const Text('Sign Up'),
             ),
 
-            SizedBox(height: FrameHeight*0.1),
+            SizedBox(height: FrameHeight*0.05),
 
 
             ElevatedButton(

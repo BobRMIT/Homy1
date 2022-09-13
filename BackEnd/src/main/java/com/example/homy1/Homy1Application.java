@@ -4,12 +4,7 @@ package com.example.homy1;
 //import com.example.homy1.model.TestUser;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.homy1.dao.UserDao;
 import com.example.homy1.dao.UserDaoImpl;
@@ -41,22 +36,30 @@ public class Homy1Application {
         @RequestMapping("/")
         public String index() throws SQLException {
             setup();
-            System.out.println("tested");
-            return "Test 1";
+            System.out.println("testing active");
+            return "Active";
 
         }
-        @RequestMapping("/create/")
-        public String addUser() throws SQLException {
+        @PostMapping("/create/")
+        public String createItem(
+                @RequestBody User user) throws SQLException {
 
         try{
-            userDao.createUser(1,"Toe","Biden","toeBiden123","abc213", "Admin" );
+            userDao.createUser(2, //change in database needed here, Database ID increment
+                    user.getFirstName(),
+                    user.getLastName(),
+                    user.getUsername(),
+                    user.getPassword(),
+                    user.getPermission());
+
+            //userDao.createUser(1,"Toe","Biden","toeBiden123","abc213", "Admin" );
         }
         catch(SQLIntegrityConstraintViolationException e){
+            System.out.println("User already exists");
             return "User already exists";
-
             }
-            return "Test 2";
 
+        return "Success";
         }
 
         @RequestMapping("/search/{username}/{password}")

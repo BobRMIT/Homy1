@@ -9,19 +9,6 @@ void main() {
   runApp(const MyApp());
 }
 
-Future<void> _GetUserData() async {
-  final Data = await http.get(Uri.parse('http://localhost:8080/TestUser/1'));
-
-  if (Data.statusCode == 200) {
-    print("Collecting User Data");
-
-    //return LoggedUserInfo.fromJson(jsonDecode(Data.body));
-  } else {
-    print("Failed to Collect User Data");
-  }
-  //throw Exception('Missing Login');
-}
-
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
@@ -170,54 +157,50 @@ class _MyHomePageState extends State<MyHomePage> {
             //SizedBox(height: FrameHeight*0.2),
             SizedBox(height: FrameHeight*0.1),
 
-            // TextFormField( OLD UI
-            //   controller: usernameController,
-            //   keyboardType: TextInputType.emailAddress, // Use email input type for emails.
-            //   decoration: const InputDecoration(
-            //       contentPadding: EdgeInsets.symmetric(horizontal: 40.0),
-            //       hintText: 'Username',
-            //       labelText: 'Username'
-            //   ),
-            // ),
-            Container(
-              padding: const EdgeInsets.all(10),
-              child: TextField(
+            SizedBox(
+              width: FrameWidth * 0.7,
+
+              child: TextFormField(
                 controller: usernameController,
                 keyboardType: TextInputType.emailAddress, // Use email input type for emails.
-                decoration: const InputDecoration(
-                  // contentPadding: EdgeInsets.symmetric(horizontal: 40.0),
-                    border: OutlineInputBorder(),
+                decoration: InputDecoration(
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 20.0),
                     hintText: 'Username',
-                    labelText: 'Username' //RENAME TO EMAI ADDRESSL?
+                    labelText: 'Username'
+                ),
               ),
             ),
-            ),
 
-            // TextFormField( OLD PASSWORD BOX
-            //   controller: passwordController,
-            //   keyboardType: TextInputType.emailAddress, // Use email input type for emails.
-            //   decoration: const InputDecoration(
-            //       contentPadding: EdgeInsets.symmetric(horizontal: 40.0),
-            //       hintText: 'Password',
-            //       labelText: 'Password'
-            //   ),
-            // ),
+            SizedBox(height: FrameHeight*0.03),
 
-            Container(
-              padding: const EdgeInsets.all(10),
-              child: TextField(
-                obscureText: true, // TO HIDE PASSWORD
+            SizedBox(
+              width: FrameWidth * 0.7,
+              child: TextFormField(
+                obscureText: true,
                 controller: passwordController,
                 keyboardType: TextInputType.emailAddress, // Use email input type for emails.
-                decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
+                decoration: InputDecoration(
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                    contentPadding: EdgeInsets.symmetric(horizontal: 20.0),
                     hintText: 'Password',
                     labelText: 'Password'
+                ),
               ),
-              ),
+
             ),
 
+            SizedBox(height: FrameHeight*0.03),
 
+            Align( alignment: const Alignment(-0.6,-1),
+              child:
+              SizedBox(
+
+                child: Text(errorTxtController.text,
+                  style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.red),
+                ),
+              ),
+            ),
 
             SizedBox(height: FrameHeight*0.1),
 
@@ -236,7 +219,7 @@ class _MyHomePageState extends State<MyHomePage> {
               child: const Text('Log In'),
             ),
 
-            SizedBox(height: FrameHeight*0.1),
+            SizedBox(height: FrameHeight*0.05),
 
 
             ElevatedButton(
@@ -253,7 +236,6 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               child: const Text('Back'),
             ),
-
           ],
         ),
       ),

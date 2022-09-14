@@ -82,4 +82,5 @@ public class User {
         return "ID = " + id + "FirstName=" + firstName + ", lastName=" + lastName + ", username=" + username + ", Permission Level="+ permission + "]";
     }
 
+
 }

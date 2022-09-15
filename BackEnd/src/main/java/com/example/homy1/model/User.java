@@ -79,7 +79,8 @@ public class User {
 
     @Override
     public String toString() {
-        return "FirstName=" + firstName + ", lastName=" + lastName + ", username=" + username + ", Permission Level="+ permission + "]";
+        return "ID = " + id + "FirstName=" + firstName + ", lastName=" + lastName + ", username=" + username + ", Permission Level="+ permission + "]";
     }
+
 
 }

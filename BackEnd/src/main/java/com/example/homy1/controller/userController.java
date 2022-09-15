@@ -1,20 +1,102 @@
 package com.example.homy1.controller;
 
+import com.example.homy1.dao.UserDaoImpl;
+import com.example.homy1.model.User;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.example.homy1.dao.UserDao;
-import java.util.List;
 
+import java.io.IOException;
+import java.net.URI;
+import java.sql.SQLException;
+@RestController
+@RequestMapping("/users")
 public class userController {
-    @RestController
-    @RequestMapping("/user")
-    public class UserController {
+    @Autowired
+    private UserDaoImpl userDao;
+    private User user;
 
-        @Autowired
-        private UserDao userDao;
+    @RequestMapping("/")
+    public String index() throws SQLException {
+        userDao = new UserDaoImpl();
+        userDao.setup();
+        System.out.println("tested");
+        return "Setup Complete";
 
+    }
+
+    @GetMapping(value = "/{username}/{password}", produces = "application/json")
+    public User get(@PathVariable String username, @PathVariable String password) throws SQLException {
+        user = userDao.getUser(username, password);
+
+        return user;
 
 
     }
+    @PostMapping(value = "/create", consumes = "application/json", produces =  "application/json")
+    public ResponseEntity<User> addUser(
+            @RequestHeader(name = "X-COM-PERSIST", required = false) String headerPersist,
+            @RequestHeader(name = "X-COM-LOCATION", required = false, defaultValue = "ASIA") String headerLocation,
+            @RequestBody User user)
+            throws Exception
+    {
+
+
+        //Generate resource id
+        Integer id = userDao.getCount() + 1;
+        user.setId(id);
+
+        //add resource
+        userDao.createUser(user.getId(), user.getFirstName(), user.getLastName(), user.getUsername(), user.getPassword(), user.getPermission());
+
+        //Create resource location
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(user.getId())
+                .toUri();
+
+        //Send location in response
+        return ResponseEntity.created(location).build();
+    }
+
+//    @RequestMapping("/create/")
+//    public String addUser() throws SQLException {
+//
+//        try {
+//            userDao.createUser(1, "Toe", "Biden", "toeBiden123", "abc213", "Admin");
+//        }catch(SQLException e){
+//            System.out.println("User already exitst");
+//        }
+//        return "Test 2";
+//
+//    }
+    @RequestMapping("/test")
+    public String searchUser() throws SQLException {
+        User n = new User();
+        userDao.getUser("toeBiden123", "abc123");
+
+        return "It works!";
+    }
+    @PostMapping("/search")
+    @ResponseBody
+    public String searchUser(@RequestParam String username, @RequestParam String password) throws SQLException {
+
+        User n = new User();
+        n = userDao.getUser(username, password);
+
+        if(n == null) {
+            System.out.println("No user found");
+        }
+        else{
+            System.out.println(n.toString());
+        }
+
+        return "Searching User";
+
+
+}
+
 }

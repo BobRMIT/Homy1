@@ -12,6 +12,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.io.IOException;
 import java.net.URI;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
+
 @RestController
 @RequestMapping("/users")
 public class userController {
@@ -28,14 +30,23 @@ public class userController {
 
     }
 
-    @GetMapping(value = "/{username}/{password}", produces = "application/json")
+    @GetMapping(value = "/{username}/{password}/", produces = "application/json")
     public User get(@PathVariable String username, @PathVariable String password) throws SQLException {
         user = userDao.getUser(username, password);
 
         return user;
+    }
 
+
+    @RequestMapping("check/{username}/")
+    public Boolean checkUserExists(@PathVariable String username) throws SQLException {
+        System.out.println("looking for username: " + username);
+        return userDao.CheckUsername(username);
 
     }
+
+
+
     @PostMapping(value = "/create", consumes = "application/json", produces =  "application/json")
     public ResponseEntity<User> addUser(
             @RequestHeader(name = "X-COM-PERSIST", required = false) String headerPersist,
@@ -50,6 +61,7 @@ public class userController {
         user.setId(id);
 
         //add resource
+
         userDao.createUser(user.getId(), user.getFirstName(), user.getLastName(), user.getUsername(), user.getPassword(), user.getPermission());
 
         //Create resource location
@@ -59,20 +71,11 @@ public class userController {
                 .toUri();
 
         //Send location in response
+        System.out.println(ResponseEntity.created(location).body(0));
+        System.out.println(ResponseEntity.created(location).build());
         return ResponseEntity.created(location).build();
     }
 
-//    @RequestMapping("/create/")
-//    public String addUser() throws SQLException {
-//
-//        try {
-//            userDao.createUser(1, "Toe", "Biden", "toeBiden123", "abc213", "Admin");
-//        }catch(SQLException e){
-//            System.out.println("User already exitst");
-//        }
-//        return "Test 2";
-//
-//    }
     @RequestMapping("/test")
     public String searchUser() throws SQLException {
         User n = new User();

@@ -103,26 +103,37 @@ class _MyHomePageState extends State<MyHomePage> {
     if ((getUsername().isNotEmpty) && (getPassword().isNotEmpty) && (getFirstName().isNotEmpty) && (getLastName().isNotEmpty)){
       if (!getUsername().contains(' ')){
         if (!getPassword().contains(' ')){
-          final response = await
-          http.post(
-            Uri.parse('http://localhost:8080/create/'),
-            headers: <String, String>{
-              'Content-Type': 'application/json; charset=UTF-8',
-            },
-            body: jsonEncode(<String, String>{
-              'username': getUsername(),
-              'password': getPassword(),
-              'firstName': getFirstName(),
-              'lastName': getLastName(),
-              'permission': 'User'
-            }),
-          );
-          if (response.body == 'Success') {
-            _setTextStateSuc(response.body);
-          }else {
-            _setTextStateError(response.body);
-          }
+          String username = getUsername();
+          final CheckUsername = await http.get(Uri.parse("http://localhost:8080/users/check/$username/"));
+          print(CheckUsername.body);
 
+          if (CheckUsername.body == "false") {
+            print("adding new user");
+            final response = await
+            http.post(
+              Uri.parse('http://localhost:8080/users/create/'),
+              headers: <String, String>{
+                'Content-Type': 'application/json; charset=UTF-8',
+              },
+              body: jsonEncode(<String, String>{
+                'username': getUsername(),
+                'password': getPassword(),
+                'firstName': getFirstName(),
+                'lastName': getLastName(),
+                'permission': 'User'
+              }),
+            );
+
+            if (response.statusCode == 201) {
+              _setTextStateSuc('Success');
+            } else {
+              print("error1");
+              print(response.statusCode);
+              _setTextStateError("error: " + response.statusCode.toString());
+            }
+          }else{
+            _setTextStateError("Username Already Taken");
+          }
         }else{
           _setTextStateError("Password Contains Whitespace");
         }

@@ -79,18 +79,21 @@ class _MyHomePageState extends State<MyHomePage> {
       if ((!username.contains(' ')) && (!password.contains(' '))) {
         try {
           final Data = await http.get(
-              Uri.parse("http://localhost:8080/search/$username/$password/"));
-          print("1 " + Data.body);
+              Uri.parse("http://localhost:8080/users$username/$password/"));
+              print(Data.body);
           if (Data.body.isEmpty) {
             _setTextState("Invalid Credentials");
             print("User Not Found");
 
-            //login succsessful
 
-          } else {
-            print(Data.body);
+          } else if(Data.statusCode == 200) { //login successful
+            //print(Data.body);
             HomePage.main();
+
+          }else {
+            _setTextState("Fatal error, statusCode: " + Data.statusCode.toString());
           }
+
         } on Exception catch (_) {
           _setTextState("Failed to connect to API");
           //throw Exception('Failed to connect to API');

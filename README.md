@@ -13,7 +13,6 @@
 
 * Github repository :https://github.com/BobRMIT/Homy1
 * jira Board : https://bobrmit.atlassian.net/jira/software/projects/HOM/boards/1
-* Google Docs : https://drive.google.com/xxxx
 
 	
 ## Code documentation - Release 0.1.0 - 18/09/2022

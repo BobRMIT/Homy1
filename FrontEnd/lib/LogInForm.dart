@@ -79,7 +79,7 @@ class _MyHomePageState extends State<MyHomePage> {
       if ((!username.contains(' ')) && (!password.contains(' '))) {
         try {
           final Data = await http.get(
-              Uri.parse("http://localhost:8080/users$username/$password/"));
+              Uri.parse("http://localhost:8080/users/$username/$password/"));
               print(Data.body);
           if (Data.body.isEmpty) {
             _setTextState("Invalid Credentials");

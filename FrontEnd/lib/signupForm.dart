@@ -129,7 +129,7 @@ class _MyHomePageState extends State<MyHomePage> {
             } else {
               print("error1");
               print(response.statusCode);
-              _setTextStateError("error: " + response.statusCode.toString());
+              _setTextStateError("error: ${response.statusCode}");
             }
           }else{
             _setTextStateError("Username Already Taken");
@@ -149,7 +149,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   _HomeScreen(){
     print("To home page");
-    HomePage.main();
+    //HomePage.main();
   }
 
 

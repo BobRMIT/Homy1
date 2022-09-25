@@ -1,9 +1,12 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:frontend/LoggedUserInfo.dart' as UserInfo;
 import 'main.dart' as MainPage;
 import 'package:http/http.dart' as http;
 import 'HomePage.dart' as HomePage;
+import 'dart:io';
+
 
 void main() {
   runApp(const MyApp());
@@ -87,11 +90,15 @@ class _MyHomePageState extends State<MyHomePage> {
 
 
           } else if(Data.statusCode == 200) { //login successful
-            //print(Data.body);
-            HomePage.main();
+            print(Data.body);
+            Map<String, dynamic> UserInfoMap = jsonDecode(Data.body);
+            //print('ID is ${UserInfoList['id']}!');
+            List<String> UserInfoList = [UserInfoMap['id'].toString(), UserInfoMap['username']];
+            //var file = await File('UserInfo.txt').writeAsString(Data.body);
+            HomePage.main(UserInfoList);
 
           }else {
-            _setTextState("Fatal error, statusCode: " + Data.statusCode.toString());
+            _setTextState("Fatal error, statusCode: ${Data.statusCode}");
           }
 
         } on Exception catch (_) {
@@ -185,7 +192,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 keyboardType: TextInputType.emailAddress, // Use email input type for emails.
                 decoration: InputDecoration(
                     border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                    contentPadding: EdgeInsets.symmetric(horizontal: 20.0),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 20.0),
                     hintText: 'Password',
                     labelText: 'Password'
                 ),

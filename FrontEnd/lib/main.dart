@@ -61,7 +61,7 @@ class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
   _ToSignup(){
-    print("To  signup form");
+    print("To signup form");
     signupForm.main(); //Going back to menu
   }
 

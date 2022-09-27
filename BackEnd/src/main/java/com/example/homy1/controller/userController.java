@@ -50,6 +50,7 @@ public class userController {
         user.setId(id);
 
         //add resource
+
         userDao.createUser(user.getId(), user.getFirstName(), user.getLastName(), user.getUsername(), user.getPassword(), user.getPermission());
 
         //Create resource location
@@ -59,20 +60,12 @@ public class userController {
                 .toUri();
 
         //Send location in response
+        System.out.println(ResponseEntity.created(location).body(0));
+        System.out.println(ResponseEntity.created(location).build());
         return ResponseEntity.created(location).build();
     }
 
-//    @RequestMapping("/create/")
-//    public String addUser() throws SQLException {
-//
-//        try {
-//            userDao.createUser(1, "Toe", "Biden", "toeBiden123", "abc213", "Admin");
-//        }catch(SQLException e){
-//            System.out.println("User already exitst");
-//        }
-//        return "Test 2";
-//
-//    }
+
     @RequestMapping("/test")
     public String searchUser() throws SQLException {
         User n = new User();

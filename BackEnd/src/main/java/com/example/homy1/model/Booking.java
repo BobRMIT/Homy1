@@ -3,34 +3,54 @@ package com.example.homy1.model;
 import javax.persistence.Column;
 import javax.persistence.Id;
 
-public class Event {
+public class Booking {
     @Id
-    @Column(name = "id", nullable = false)
-    private Integer id;
+    @Column(name = "eventID", nullable = false)
+    private Integer eventID;
     private String eventName;
     private String startDate;
     private String endDate;
     private String description;
+    private Integer userID;
+    private Integer doctorID;
 
 
-    public Event(){
+    public Booking(){
 
     }
 
-    public Event(Integer id, String eventName, String startDate, String endDate, String description) {
-        this.id = id;
+    public Booking(Integer eventID, String eventName, String startDate, String endDate, String description, Integer userID, Integer doctorID) {
+        this.eventID = eventID;
         this.eventName = eventName;
         this.startDate = startDate;
         this.endDate = endDate;
         this.description = description;
+        this.userID = userID;
+        this.doctorID = doctorID;
     }
 
-    public Integer getId() {
-        return id;
+    public Integer getEventID() {
+        return eventID;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setEventID(Integer eventID) {
+        this.eventID = eventID;
+    }
+
+    public Integer getUserID() {
+        return userID;
+    }
+
+    public void setUserID(Integer userID) {
+        this.userID = userID;
+    }
+
+    public Integer getDoctorID() {
+        return doctorID;
+    }
+
+    public void setDoctorID(Integer doctorID) {
+        this.doctorID = doctorID;
     }
 
     public String getEventName() {

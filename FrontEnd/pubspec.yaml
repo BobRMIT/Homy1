@@ -30,6 +30,8 @@ dependencies:
   http: ^0.13.5
   flutter:
     sdk: flutter
+  syncfusion_flutter_calendar: ^20.2.50
+  dropdown_button2: ^1.8.2
 
 
 

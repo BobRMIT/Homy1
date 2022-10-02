@@ -1,9 +1,12 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'main.dart' as MainPage;
 import 'package:http/http.dart' as http;
 import 'HomePage.dart' as HomePage;
+import 'package:localstorage/localstorage.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -67,7 +70,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
    _BackToMenu(){
-    print("Back to menu screen");
+    //print("Back to menu screen");
     MainPage.main(); //Going back to menu
   }
 
@@ -80,18 +83,20 @@ class _MyHomePageState extends State<MyHomePage> {
         try {
           final Data = await http.get(
               Uri.parse("http://localhost:8080/users/$username/$password/"));
-              print(Data.body);
+              //print('stuff ${Data.body}');
           if (Data.body.isEmpty) {
             _setTextState("Invalid Credentials");
-            print("User Not Found");
+            //print("User Not Found");
 
 
           } else if(Data.statusCode == 200) { //login successful
             //print(Data.body);
+            LocalStorage storage = LocalStorage('key');
+            storage.setItem('getID', Data.body);
             HomePage.main();
 
           }else {
-            _setTextState("Fatal error, statusCode: " + Data.statusCode.toString());
+            _setTextState("Fatal error, statusCode: ${Data.statusCode}");
           }
 
         } on Exception catch (_) {
@@ -116,44 +121,16 @@ class _MyHomePageState extends State<MyHomePage> {
     var FrameWidth = MediaQuery.of(context).size.width;
     var FrameHeight = MediaQuery.of(context).size.width;
 
-
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
 
 
       appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: const Text("Hello"),
+        title: const Text("Log In"),
       ),
       body: Center(
 
-
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
         child: Column(
 
-
-
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
 
@@ -223,7 +200,6 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
 
             SizedBox(height: FrameHeight*0.05),
-
 
             ElevatedButton(
 

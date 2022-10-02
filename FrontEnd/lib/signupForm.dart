@@ -94,7 +94,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
 
   _BackToMenu(){
-    print("Back to menu screen");
+    //print("Back to menu screen");
     MainPage.main(); //Going back to menu
   }
 
@@ -105,7 +105,7 @@ class _MyHomePageState extends State<MyHomePage> {
         if (!getPassword().contains(' ')){
           String username = getUsername();
           final CheckUsername = await http.get(Uri.parse("http://localhost:8080/users/check/$username/"));
-          print(CheckUsername.body);
+          //print(CheckUsername.body);
 
           if (CheckUsername.body == "false") {
             print("adding new user");
@@ -127,9 +127,9 @@ class _MyHomePageState extends State<MyHomePage> {
             if (response.statusCode == 201) {
               _setTextStateSuc('Success');
             } else {
-              print("error1");
-              print(response.statusCode);
-              _setTextStateError("error: " + response.statusCode.toString());
+              //print("error1");
+              //print(response.statusCode);
+              _setTextStateError("error: ${response.statusCode}");
             }
           }else{
             _setTextStateError("Username Already Taken");
@@ -148,7 +148,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
 
   _HomeScreen(){
-    print("To home page");
+    //print("To home page");
     HomePage.main();
   }
 
@@ -175,7 +175,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: const Text("Hello"),
+        title: const Text("Sign Up"),
       ),
       body: Center(
 

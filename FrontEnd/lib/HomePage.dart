@@ -112,6 +112,8 @@ class _MyHomePageState extends State<MyHomePage> {
       BookingPage.BookingPage(),
     ];
     return Scaffold(
+
+
       body: screens[pageIndex],
       bottomNavigationBar: NavigationBar(
         onDestinationSelected: (int index) {
@@ -192,13 +194,13 @@ class _MyHomePageState extends State<MyHomePage> {
       //   ),
       // ][pageIndex],
 
-
+/*
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: const Text("Hello"),
       ),
-
+*/
       // bottomSheet: Center(
       //
       //

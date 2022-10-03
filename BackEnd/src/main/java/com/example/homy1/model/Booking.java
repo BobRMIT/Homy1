@@ -8,9 +8,9 @@ public class Booking {
     @Column(name = "eventID", nullable = false)
     private Integer eventID;
     private String eventName;
-    private String startDate;
-    private String endDate;
-    private String description;
+    private String eventStart;
+    private String eventEnd;
+    private String eventDetails;
     private Integer userID;
     private Integer doctorID;
 
@@ -19,12 +19,12 @@ public class Booking {
 
     }
 
-    public Booking(Integer eventID, String eventName, String startDate, String endDate, String description, Integer userID, Integer doctorID) {
+    public Booking(Integer eventID, String eventName, String eventStart, String eventEnd, String eventDetails, Integer userID, Integer doctorID) {
         this.eventID = eventID;
         this.eventName = eventName;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.description = description;
+        this.eventStart = eventStart;
+        this.eventEnd = eventEnd;
+        this.eventDetails = eventDetails;
         this.userID = userID;
         this.doctorID = doctorID;
     }
@@ -35,6 +35,38 @@ public class Booking {
 
     public void setEventID(Integer eventID) {
         this.eventID = eventID;
+    }
+
+    public String getEventName() {
+        return eventName;
+    }
+
+    public void setEventName(String eventName) {
+        this.eventName = eventName;
+    }
+
+    public String getEventStart() {
+        return eventStart;
+    }
+
+    public void setEventStart(String eventStart) {
+        this.eventStart = eventStart;
+    }
+
+    public String getEventEnd() {
+        return eventEnd;
+    }
+
+    public void setEventEnd(String eventEnd) {
+        this.eventEnd = eventEnd;
+    }
+
+    public String getEventDetails() {
+        return eventDetails;
+    }
+
+    public void setEventDetails(String eventDetails) {
+        this.eventDetails = eventDetails;
     }
 
     public Integer getUserID() {
@@ -51,37 +83,5 @@ public class Booking {
 
     public void setDoctorID(Integer doctorID) {
         this.doctorID = doctorID;
-    }
-
-    public String getEventName() {
-        return eventName;
-    }
-
-    public void setEventName(String eventName) {
-        this.eventName = eventName;
-    }
-
-    public String getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(String startDate) {
-        this.startDate = startDate;
-    }
-
-    public String getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(String endDate) {
-        this.endDate = endDate;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 }

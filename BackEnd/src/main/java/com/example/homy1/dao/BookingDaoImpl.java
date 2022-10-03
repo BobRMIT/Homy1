@@ -1,6 +1,7 @@
 package com.example.homy1.dao;
 
 import com.example.homy1.model.Booking;
+import com.example.homy1.model.User;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -12,15 +13,16 @@ public class BookingDaoImpl {
     public void setup() throws SQLException {
         try (Connection connection = Database.getConnection();
              Statement stmt = connection.createStatement();) {
-            String sql = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + "(id INTEGER NOT NULL AUTO_INCREMENT, eventName VARCHAR(255) NOT NULL," +
+            String sql = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + "(eventID INTEGER NOT NULL AUTO_INCREMENT, eventName VARCHAR(255) NOT NULL," +
                     "eventStart VARCHAR(255) NOT NULL," + "eventEnd VARCHAR(255) NOT NULL,"
-                    + "eventDetails VARCHAR(255) NOT NULL,"+ "userID INTEGER NOT NULL," + "PRIMARY KEY (id))";
+                    + "eventDetails VARCHAR(255) NOT NULL,"+ "userID INTEGER NOT NULL," + "doctorID INTEGER NOT NULL," + "PRIMARY KEY (eventID))";
 
             stmt.executeUpdate(sql);
         }
     }
 
-
+//  createBooking() function
+//  Creates an entry in the MYSQL database and returns the new booking added
     public Booking createBooking(Integer eventID, String eventName, String eventStart, String eventEnd, String eventDetails, Integer userID, Integer doctorID) throws SQLException {
         String sql = "INSERT INTO " + TABLE_NAME + " VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = Database.getConnection();
@@ -40,8 +42,32 @@ public class BookingDaoImpl {
         }
     }
 
+    public Booking getBooking(Integer eventID) throws SQLException{
+        String sql = "SELECT * FROM " + TABLE_NAME + " WHERE eventID = ?";
+        try (Connection connection = Database.getConnection();
+
+             PreparedStatement stmt = connection.prepareStatement(sql);) {
+            stmt.setInt(1, eventID);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next())  {
+                    Booking booking = new Booking();
+                    booking.setEventID(rs.getInt("eventID"));
+                    booking.setEventName(rs.getString("eventName"));
+                    booking.setEventStart(rs.getString("eventEnd"));
+                    booking.setEventEnd(rs.getString("eventEnd"));
+                    booking.setEventDetails(rs.getString("eventDetails"));
+                    booking.setUserID(rs.getInt("userID"));
+                    booking.setDoctorID(rs.getInt("doctorID"));
+//                    System.out.println(user.toString());
+                    return booking;
+                }
+                return null;
+            }
+        }
+    }
+
     public Integer getCount() throws SQLException{
-        String sql = "SELECT COUNT(*) FROM booking";
+        String sql = "SELECT COUNT(*) FROM" + TABLE_NAME;
         try (Connection connection = Database.getConnection();
              PreparedStatement stmt = connection.prepareStatement(sql);) {
             ResultSet resultSet = stmt.executeQuery(sql);

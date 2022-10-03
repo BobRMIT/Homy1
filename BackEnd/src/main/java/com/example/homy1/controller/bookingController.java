@@ -44,7 +44,7 @@ public class bookingController {
 
         //add resource
 
-        bookingDao.createBooking(booking.getEventID(), booking.getEventName(), booking.getStartDate(), booking.getEndDate(), booking.getDescription(), booking.getUserID()
+        bookingDao.createBooking(booking.getEventID(), booking.getEventName(), booking.getEventStart(), booking.getEventEnd(), booking.getEventDetails(), booking.getUserID()
         , booking.getDoctorID());
 
         //Create resource location
@@ -58,4 +58,14 @@ public class bookingController {
         System.out.println(ResponseEntity.created(location).build());
         return ResponseEntity.created(location).build();
     }
+
+    @GetMapping(value ="/{userID}/{bookingD}", produces = "application/json")
+    public String getBooking(@PathVariable Integer userID, @PathVariable Integer bookingID) throws SQLException{
+       booking = bookingDao.getBooking(bookingID);
+
+       return booking.toString();
+    }
+
+
+
 }

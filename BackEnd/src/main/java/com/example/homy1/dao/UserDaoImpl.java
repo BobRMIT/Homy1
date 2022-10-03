@@ -16,9 +16,9 @@ public class UserDaoImpl{
     public void setup() throws SQLException {
         try (Connection connection = Database.getConnection();
              Statement stmt = connection.createStatement();) {
-            String sql = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + "(id INTEGER NOT NULL AUTO_INCREMENT, username VARCHAR(255) NOT NULL," +
+            String sql = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + "(id INTEGER NOT NULL AUTO_INCREMENT, username VARCHAR(255) NOT NULL UNIQUE," +
                     "password VARCHAR(255) NOT NULL," + "firstName VARCHAR(255) NOT NULL,"
-                    + "lastName VARCHAR(255) NOT NULL," + "permission VARCHAR(255) NOT NULL," + "PRIMARY KEY (username))";
+                    + "lastName VARCHAR(255) NOT NULL," + "permission VARCHAR(255) NOT NULL," + "PRIMARY KEY (id,username))";
             stmt.executeUpdate(sql);
         }
     }
@@ -84,10 +84,6 @@ public class UserDaoImpl{
              user.setPermission(permission);
              return user;
 
-
-
-
-
         }
     }
 
@@ -117,5 +113,21 @@ public class UserDaoImpl{
 
     public User listUsers(){
         return null;
+    }
+
+    public boolean CheckUsername(String username) throws SQLException{
+        String sql = "SELECT * FROM " + TABLE_NAME + " WHERE username = ?";
+        try (Connection connection = Database.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(sql);){
+            stmt.setString(1, username);
+            stmt.executeQuery();
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next())  {
+                    return true;
+                }
+                return false;
+            }
+        }
+
     }
 }

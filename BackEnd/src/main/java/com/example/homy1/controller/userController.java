@@ -12,6 +12,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.io.IOException;
 import java.net.URI;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
+
 @RestController
 @RequestMapping("/users")
 public class userController {
@@ -28,14 +30,23 @@ public class userController {
 
     }
 
-    @GetMapping(value = "/{username}/{password}", produces = "application/json")
+    @GetMapping(value = "/{username}/{password}/", produces = "application/json")
     public User get(@PathVariable String username, @PathVariable String password) throws SQLException {
         user = userDao.getUser(username, password);
 
         return user;
+    }
 
+
+    @RequestMapping("check/{username}/")
+    public Boolean checkUserExists(@PathVariable String username) throws SQLException {
+        System.out.println("looking for username: " + username);
+        return userDao.CheckUsername(username);
 
     }
+
+
+
     @PostMapping(value = "/create", consumes = "application/json", produces =  "application/json")
     public ResponseEntity<User> addUser(
             @RequestHeader(name = "X-COM-PERSIST", required = false) String headerPersist,
@@ -64,7 +75,6 @@ public class userController {
         System.out.println(ResponseEntity.created(location).build());
         return ResponseEntity.created(location).build();
     }
-
 
     @RequestMapping("/test")
     public String searchUser() throws SQLException {

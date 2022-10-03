@@ -89,7 +89,7 @@ class _MyHomePageState extends State<MyHomePage> {
     //final Data = await http.get(Uri.parse('http://localhost:8080/TestUser/1'));
     try {
       final Data = await http.get(
-          Uri.parse("http://localhost:8080/"));
+          Uri.parse("http://localhost:8080/users/"));
       if (Data.statusCode == 200) {
         print("BackEnd Active");
         if (mode == 1){
@@ -111,9 +111,6 @@ class _MyHomePageState extends State<MyHomePage> {
       throw Exception('Failed to connect to API');
     }
   }
-
-
-
 
   @override
   Widget build(BuildContext context) {

@@ -1,7 +1,13 @@
 import 'dart:convert';
+import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 import 'package:flutter/material.dart';
 import 'LogInForm.dart' as LoginPage;
+import './page/ChatPage.dart' as ChatPage;
+import './page/HomePage.dart' as HomePage;
+import './page/NotificationsPage.dart' as NotificationsPage;
+import './page/SettingsPage.dart' as SettingsPage;
+import './page/BookingPage.dart' as BookingPage;
 import 'package:http/http.dart' as http;
 
 void main() {
@@ -50,13 +56,16 @@ class MyHomePage extends StatefulWidget {
 
   final String title;
 
+
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
-  int currentPageIndex = 0;
+  int pageIndex = 0;
+  final _controller = CalendarController();
+
 
 
   void _incrementCounter() {
@@ -95,14 +104,25 @@ class _MyHomePageState extends State<MyHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
+    final screens = [
+      HomePage.HomePage(),
+      ChatPage.ChatPage(),
+      NotificationsPage.NotificationsPage(),
+      SettingsPage.SettingsPage(),
+      BookingPage.BookingPage(),
+    ];
     return Scaffold(
+
+
+      body: screens[pageIndex],
       bottomNavigationBar: NavigationBar(
         onDestinationSelected: (int index) {
           setState(() {
-            currentPageIndex = index;
+            pageIndex = index;
           });
         },
-        selectedIndex: currentPageIndex,
+        backgroundColor: Colors.blue, //blue colour for bottom
+        selectedIndex: pageIndex,
         destinations: const <Widget>[
           NavigationDestination(
             icon: Icon(Icons.home),
@@ -117,50 +137,70 @@ class _MyHomePageState extends State<MyHomePage> {
             icon: Icon(Icons.notification_add),
             label: 'Notifications',
           ),
+          NavigationDestination(
+            selectedIcon: Icon(Icons.settings),
+            icon: Icon(Icons.settings),
+            label: 'Settings',
+          ),
+          NavigationDestination(
+            selectedIcon: Icon(Icons.health_and_safety),
+            icon: Icon(Icons.health_and_safety),
+            label: 'Booking',
+          ),
         ],
       ),
-      body: <Widget>[
-        SizedBox(height: FrameHeight * 0.2),
-        SizedBox(height: FrameHeight * 0.1),
+      // body: <Widget>[
+      //   // SizedBox(height: FrameHeight * 0.2),
+      //   // SizedBox(height: FrameHeight * 0.1),
+      //
+      //   ElevatedButton(
+      //
+      //     onPressed: _BackToLogin,
+      //     style: ElevatedButton.styleFrom(
+      //         fixedSize: Size(FrameWidth * 0.3, FrameHeight * 0.1),
+      //         primary: Colors.blue,
+      //         onPrimary: Colors.black,
+      //         padding: const EdgeInsets.symmetric(
+      //             horizontal: 20, vertical: 20),
+      //         textStyle: const TextStyle(
+      //           fontSize: 20,)
+      //     ),
+      //     child: const Text('Back'),
+      //   ),
+      //   Container(
+      //     // color: Colors.red,
+      //     alignment: Alignment.center,
+      //     child: const Text('Home'), // writing within the navigation page
+      //   ),
+      //   Container(
+      //     // color: Colors.green,
+      //     alignment: Alignment.center,
+      //     child: const Text('chat page'),
+      //   ),
+      //   Container(
+      //     // color: Colors.blue,
+      //     alignment: Alignment.center,
+      //     child: const Text('notifications page'),
+      //   ),
+      //   Container(
+      //     // color: Colors.blue,
+      //     alignment: Alignment.center,
+      //     child: const Text('settings'),
+      //   ),
+      //   Container(
+      //     // color: Colors.blue,
+      //     alignment: Alignment.center,
+      //     child: const Text('Booking'),
+      //   ),
+      // ][pageIndex],
 
-        ElevatedButton(
-
-          onPressed: _BackToLogin,
-          style: ElevatedButton.styleFrom(
-              fixedSize: Size(FrameWidth * 0.1, FrameHeight * 0.1),
-              primary: Colors.blue,
-              onPrimary: Colors.black,
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 20, vertical: 20),
-              textStyle: const TextStyle(
-                fontSize: 20,)
-          ),
-          child: const Text('B'),
-        ),
-        Container(
-          // color: Colors.red,
-          alignment: Alignment.center,
-          child: const Text('Home page'),
-        ),
-        Container(
-          // color: Colors.green,
-          alignment: Alignment.center,
-          child: const Text('chat page'),
-        ),
-        Container(
-          // color: Colors.blue,
-          alignment: Alignment.center,
-          child: const Text('notifications page'),
-        ),
-      ][currentPageIndex],
-
-
+/*
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: const Text("Hello"),
       ),
-
+*/
       // bottomSheet: Center(
       //
       //

@@ -42,6 +42,16 @@ public class BookingDaoImpl {
         }
     }
 
+    public boolean removeBooking(Integer eventID, Integer userID) throws SQLException{
+        String sql = "DELETE * FROM " + TABLE_NAME + " WHERE eventID = ? AND userID = ?";
+        try (Connection connection = Database.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(sql);) {
+            stmt.setInt(1, eventID);
+            stmt.setInt(2, userID);
+            return stmt.execute();
+        }
+    }
+
     public Booking getBooking(Integer eventID) throws SQLException{
         String sql = "SELECT * FROM " + TABLE_NAME + " WHERE eventID = ?";
         try (Connection connection = Database.getConnection();
@@ -53,7 +63,36 @@ public class BookingDaoImpl {
                     Booking booking = new Booking();
                     booking.setEventID(rs.getInt("eventID"));
                     booking.setEventName(rs.getString("eventName"));
-                    booking.setEventStart(rs.getString("eventEnd"));
+                    booking.setEventStart(rs.getString("eventStart"));
+                    booking.setEventEnd(rs.getString("eventEnd"));
+                    booking.setEventDetails(rs.getString("eventDetails"));
+                    booking.setUserID(rs.getInt("userID"));
+                    booking.setDoctorID(rs.getInt("doctorID"));
+//                    System.out.println(user.toString());
+                    return booking;
+                }
+                return null;
+            }
+        }
+    }
+
+    public Booking updateBooking(Integer eventID, String eventName, String eventStart, String eventEnd, String eventDetails, Integer userID, Integer doctorID) throws SQLException{
+        String sql = "UPDATE " + TABLE_NAME + " SET eventName = ?, eventStart = ?, eventEnd = ?, eventDetails = ?, userID = ?, doctorID = ?";
+        try (Connection connection = Database.getConnection();
+
+             PreparedStatement stmt = connection.prepareStatement(sql);) {
+            stmt.setString(1, eventName);
+            stmt.setString(2, eventStart);
+            stmt.setString(3, eventEnd);
+            stmt.setString(4, eventDetails);
+            stmt.setInt(5, userID);
+            stmt.setInt(6, doctorID);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next())  {
+                    Booking booking = new Booking();
+                    booking.setEventID(rs.getInt("eventID"));
+                    booking.setEventName(rs.getString("eventName"));
+                    booking.setEventStart(rs.getString("eventStart"));
                     booking.setEventEnd(rs.getString("eventEnd"));
                     booking.setEventDetails(rs.getString("eventDetails"));
                     booking.setUserID(rs.getInt("userID"));

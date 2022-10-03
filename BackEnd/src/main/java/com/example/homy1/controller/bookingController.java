@@ -24,7 +24,6 @@ public class bookingController {
     public String index() throws SQLException {
         bookingDao = new BookingDaoImpl();
         bookingDao.setup();
-        System.out.println("tested");
         return "Setup Complete";
 
     }
@@ -65,6 +64,29 @@ public class bookingController {
 
        return booking.toString();
     }
+
+    @PostMapping(value = "/update", consumes = "application/json", produces =  "application/json")
+    public ResponseEntity<User> updateBooking(
+        @RequestHeader(name = "X-COM-PERSIST", required = false) String headerPersist,
+        @RequestHeader(name = "X-COM-LOCATION", required = false, defaultValue = "ASIA") String headerLocation,
+        @RequestBody Booking booking)
+            throws Exception
+        {
+            bookingDao.updateBooking(booking.getEventID(), booking.getEventName(), booking.getEventStart(), booking.getEventEnd(), booking.getEventDetails(), booking.getUserID()
+                    , booking.getDoctorID());
+
+            //Create resource location
+            URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                    .path("/{id}")
+                    .buildAndExpand(booking.getEventID())
+                    .toUri();
+
+            //Send location in response
+            System.out.println(ResponseEntity.created(location).body(0));
+            System.out.println(ResponseEntity.created(location).build());
+            return ResponseEntity.created(location).build();
+        }
+
 
 
 

@@ -7,7 +7,9 @@ import java.sql.*;
 
 @Repository
 public class UserDaoImpl{
+
     private final String TABLE_NAME = "users";
+    private final String TABLE_NAME2 = "bookings";
 
     public UserDaoImpl() {
 
@@ -20,6 +22,11 @@ public class UserDaoImpl{
                     "password VARCHAR(255) NOT NULL," + "firstName VARCHAR(255) NOT NULL,"
                     + "lastName VARCHAR(255) NOT NULL," + "permission VARCHAR(255) NOT NULL," + "PRIMARY KEY (id,username))";
             stmt.executeUpdate(sql);
+
+            sql = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME2 + "(id INTEGER NOT NULL AUTO_INCREMENT, username VARCHAR(255) NOT NULL UNIQUE," +
+                    "password VARCHAR(255) NOT NULL," + "firstName VARCHAR(255) NOT NULL,"
+                    + "lastName VARCHAR(255) NOT NULL," + "permission VARCHAR(255) NOT NULL," + "PRIMARY KEY (id,username))";
+            //stmt.executeUpdate(sql);
         }
     }
 

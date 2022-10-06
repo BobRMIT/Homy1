@@ -1,14 +1,15 @@
 package com.example.homy1.dao;
 
 import com.example.homy1.model.Booking;
-import com.example.homy1.model.User;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 @Repository
 public class BookingDaoImpl {
     private final String TABLE_NAME = "booking";
+    private final String TABLE_NAME2 = "users";
 
     public void setup() throws SQLException {
         try (Connection connection = Database.getConnection();
@@ -24,20 +25,19 @@ public class BookingDaoImpl {
 //  createBooking() function
 //  Creates an entry in the MYSQL database and returns the new booking added
     public Booking createBooking(Integer eventID, String eventName, String eventStart, String eventEnd, String eventDetails, Integer userID, Integer doctorID) throws SQLException {
-        String sql = "INSERT INTO " + TABLE_NAME + " VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO " + TABLE_NAME + "(eventName, eventStart, eventEnd, eventDetails, userID, doctorID) VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection connection = Database.getConnection();
 
              PreparedStatement stmt = connection.prepareStatement(sql);) {
-            stmt.setInt(1, eventID);
-            stmt.setString(2, eventName);
-            stmt.setString(3, eventStart);
-            stmt.setString(4, eventEnd);
-            stmt.setString(5, eventDetails);
-            stmt.setInt(6, userID);
-            stmt.setInt(7, doctorID);
+            stmt.setString(1, eventName);
+            stmt.setString(2, eventStart);
+            stmt.setString(3, eventEnd);
+            stmt.setString(4, eventDetails);
+            stmt.setInt(5, userID);
+            stmt.setInt(6, doctorID);
 
             stmt.executeUpdate();
-            return new Booking(eventID, eventName, eventStart, eventEnd, eventDetails, userID, doctorID);
+            return new Booking(eventName, eventStart, eventEnd, eventDetails, userID, doctorID);
 
         }
     }
@@ -117,4 +117,27 @@ public class BookingDaoImpl {
         return 0;
 
     }
+
+    public ArrayList<String> getDoctorNamesAndIDs() throws SQLException{
+        String sql = "SELECT username FROM " + TABLE_NAME2 + " WHERE permission = ?";
+        ArrayList<String> DocNameList = new ArrayList<String>();
+
+        try (Connection connection = Database.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, "Doctor");
+            System.out.println(stmt);
+            ResultSet rs = stmt.executeQuery();
+            //Doc
+            while (rs.next()){
+                DocNameList.add(rs.getString("username"));
+                System.out.println(rs.getString("username"));
+            }
+
+            return DocNameList;
+
+        }
+
+
+    }
+
 }

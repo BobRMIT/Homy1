@@ -5,7 +5,7 @@ import javax.persistence.Id;
 
 public class Booking {
     @Id
-    @Column(name = "eventID", nullable = false)
+    @Column(name = "eventID", nullable = true)
     private Integer eventID;
     private String eventName;
     private String eventStart;
@@ -19,8 +19,7 @@ public class Booking {
 
     }
 
-    public Booking(Integer eventID, String eventName, String eventStart, String eventEnd, String eventDetails, Integer userID, Integer doctorID) {
-        this.eventID = eventID;
+    public Booking(String eventName, String eventStart, String eventEnd, String eventDetails, Integer userID, Integer doctorID) {
         this.eventName = eventName;
         this.eventStart = eventStart;
         this.eventEnd = eventEnd;

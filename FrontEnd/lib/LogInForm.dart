@@ -94,6 +94,7 @@ class _MyHomePageState extends State<MyHomePage> {
             LocalStorage storage = LocalStorage('key');
             storage.setItem('getID', Data.body);
             HomePage.main();
+            //Bookingv2.main();
 
           }else {
             _setTextState("Fatal error, statusCode: ${Data.statusCode}");
@@ -122,7 +123,6 @@ class _MyHomePageState extends State<MyHomePage> {
     var FrameHeight = MediaQuery.of(context).size.width;
 
     return Scaffold(
-
 
       appBar: AppBar(
         title: const Text("Log In"),

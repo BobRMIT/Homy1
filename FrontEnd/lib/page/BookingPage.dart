@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
+import 'package:localstorage/localstorage.dart';
 
 // class BookingPage extends StatelessWidget{
 //   @override
@@ -14,13 +18,14 @@ import 'package:intl/intl.dart';
 
 
 
+
 class BookingPage extends StatelessWidget {
   const BookingPage({Key? key}) : super(key: key);
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    // _GetUserData();
+
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -46,7 +51,6 @@ class MyHomePage extends StatefulWidget {
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
-
   final String title;
 }
 
@@ -54,11 +58,23 @@ class _MyHomePageState extends State<MyHomePage> {
   TextEditingController dateController = TextEditingController();
   TextEditingController timeController = TextEditingController();
 
+  List<String> items = //DoctorList() as List<String>;
+  ['123','321','456'];
+
+  String? selectedValue;
+
+  String getDate() {
+    return  dateController.text;
+  }
+
   @override
   void initState() {
+    super.initState();
     dateController.text = ""; //set the initial value of text field
     timeController.text = "";
-    super.initState();
+
+
+
   }
 
   @override
@@ -72,13 +88,56 @@ class _MyHomePageState extends State<MyHomePage> {
         .size
         .width;
 
-    final List<String> items = [
-      'DR 1',
-      'DR 2',
-      'DR 3',
-      'DR 4',
-    ];
-    String? selectedValue;
+    //var data = http.get(Uri.parse("http://localhost:8080/booking/getDoctors/"));
+
+    Future<void> DoctorList() async {
+      final Data = await http.get(
+          Uri.parse("http://localhost:8080/booking/getDoctors/"));
+        String info = Data.body;
+        info = info.replaceAll(']','').replaceAll('[','').replaceAll(',','');
+        info = info.substring(1, info.length-1);
+
+        setState(() {
+          items = info.split('""');
+        });
+
+       // if (Data.body.isEmpty) {
+        //    DoctorListS = "";
+       // }
+          //return [""];
+        //_setTextState("Failed to connect to API");
+      }
+    //return [DoctorListS];s
+
+    Future<void> BookBookBook() async {
+
+      LocalStorage storage = LocalStorage('key');
+      Map<String, dynamic> userID = jsonDecode(storage.getItem('getID'));
+
+
+      final Data = await  http.post(
+        Uri.parse('http://localhost:8080/booking/create/'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'eventID:' : "",
+          'eventName': "Booking",
+          'eventStart': getDate(),
+          'eventEnd': "2",
+          'eventDetails': "Desc",
+          'userID': userID['id'].toString(),
+          'doctorID': '1'//selectedValue.toString()
+        }),
+      );
+    }
+
+
+
+
+
+
+    //String? selectedValue;
     final bool readOnly = false;
     final f = new DateFormat('yyyy-MM-dd hh:mm');
 
@@ -134,8 +193,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 ))
                 .toList(),
             value: selectedValue,
+
             onChanged: (value) {
               setState(() {
+                print("change");
                 selectedValue = value as String;
               });
             },
@@ -198,9 +259,25 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           SizedBox(height: FrameHeight*0.1),
 
+        ElevatedButton(
+
+          onPressed: BookBookBook, // add action for save later to add to calendar
+          style: ElevatedButton.styleFrom(
+              fixedSize: Size(FrameWidth * 0.6, FrameHeight*0.1),
+              primary: Colors.blue,
+              onPrimary: Colors.black,
+              padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+              textStyle: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold)
+          ),
+          child: const Text('Save'),),
+
+          SizedBox(height: FrameHeight*0.1),
+
           ElevatedButton(
 
-            onPressed: (){}, // add action for save later to add to calendar
+            onPressed: DoctorList, // add action for save later to add to calendar
             style: ElevatedButton.styleFrom(
                 fixedSize: Size(FrameWidth * 0.6, FrameHeight*0.1),
                 primary: Colors.blue,
@@ -210,7 +287,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     fontSize: 20,
                     fontWeight: FontWeight.bold)
             ),
-            child: const Text('Save'),
+            child: const Text('Initiate'),
           ),
     ],
     ),

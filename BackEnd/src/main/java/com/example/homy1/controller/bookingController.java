@@ -10,8 +10,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.awt.*;
 import java.net.URI;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 @RestController
 @RequestMapping("/booking")
@@ -87,7 +89,12 @@ public class bookingController {
             return ResponseEntity.created(location).build();
         }
 
+    @GetMapping(value ="/getDoctors/", produces = "application/json")
+    public ArrayList<String> getDoctors() throws SQLException{
+        System.out.print(bookingDao.getDoctorNamesAndIDs());
 
+        return bookingDao.getDoctorNamesAndIDs();
+    }
 
 
 }

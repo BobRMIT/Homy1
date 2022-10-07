@@ -46,7 +46,7 @@ public class bookingController {
         //add resource
 
         bookingDao.createBooking(booking.getEventID(), booking.getEventName(), booking.getEventStart(), booking.getEventEnd(), booking.getEventDetails(), booking.getUserID()
-        , booking.getDoctorID());
+        , booking.getDoctorName());
 
         //Create resource location
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -60,12 +60,15 @@ public class bookingController {
         return ResponseEntity.created(location).build();
     }
 
+    //This function may be obsolete
+    /*
     @GetMapping(value ="/{userID}/{bookingD}", produces = "application/json")
     public String getBooking(@PathVariable Integer userID, @PathVariable Integer bookingID) throws SQLException{
-       booking = bookingDao.getBooking(bookingID);
+       booking = bookingDao.getBookingList(bookingID);
 
        return booking.toString();
-    }
+    }*/
+
 
     @PostMapping(value = "/update", consumes = "application/json", produces =  "application/json")
     public ResponseEntity<User> updateBooking(
@@ -96,5 +99,11 @@ public class bookingController {
         return bookingDao.getDoctorNamesAndIDs();
     }
 
+    @GetMapping(value ="/GetBookingList/{doctorsID}", produces = "application/json")
+    public ArrayList<String> getBooking(@PathVariable Integer doctorsID) throws SQLException{
+        System.out.print(bookingDao.getBookingList(doctorsID));
+
+        return bookingDao.getBookingList(doctorsID);
+    }
 
 }

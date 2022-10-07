@@ -13,19 +13,21 @@ public class Booking {
     private String eventDetails;
     private Integer userID;
     private Integer doctorID;
+    private String doctorName;
 
 
     public Booking(){
 
     }
 
-    public Booking(String eventName, String eventStart, String eventEnd, String eventDetails, Integer userID, Integer doctorID) {
+    public Booking(String eventName, String eventStart, String eventEnd, String eventDetails, Integer userID, Integer doctorID, String doctorName) {
         this.eventName = eventName;
         this.eventStart = eventStart;
         this.eventEnd = eventEnd;
         this.eventDetails = eventDetails;
         this.userID = userID;
         this.doctorID = doctorID;
+        this.doctorName = doctorName;
     }
 
     public Integer getEventID() {
@@ -78,6 +80,10 @@ public class Booking {
 
     public Integer getDoctorID() {
         return doctorID;
+    }
+
+    public String getDoctorName() {
+        return doctorName;
     }
 
     public void setDoctorID(Integer doctorID) {

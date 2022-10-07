@@ -24,8 +24,12 @@ public class BookingDaoImpl {
 
 //  createBooking() function
 //  Creates an entry in the MYSQL database and returns the new booking added
-    public Booking createBooking(Integer eventID, String eventName, String eventStart, String eventEnd, String eventDetails, Integer userID, Integer doctorID) throws SQLException {
+    public Booking createBooking(Integer eventID, String eventName, String eventStart, String eventEnd, String eventDetails, Integer userID, String doctorName) throws SQLException {
+
         String sql = "INSERT INTO " + TABLE_NAME + "(eventName, eventStart, eventEnd, eventDetails, userID, doctorID) VALUES (?, ?, ?, ?, ?, ?)";
+
+        int doctorID = getDoctorIDFromName(doctorName);
+
         try (Connection connection = Database.getConnection();
 
              PreparedStatement stmt = connection.prepareStatement(sql);) {
@@ -37,7 +41,30 @@ public class BookingDaoImpl {
             stmt.setInt(6, doctorID);
 
             stmt.executeUpdate();
-            return new Booking(eventName, eventStart, eventEnd, eventDetails, userID, doctorID);
+            return new Booking(eventName, eventStart, eventEnd, eventDetails, userID, doctorID, doctorName);
+
+        }
+    }
+
+    private Integer getDoctorIDFromName(String doctorname) throws SQLException {
+
+        String sql = "SELECT * FROM " + TABLE_NAME2 + " WHERE permission = ?";
+        String DocNameDatabase;
+
+        try (Connection connection = Database.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, "Doctor");
+            System.out.println(stmt);
+            ResultSet rs = stmt.executeQuery();
+            //Doc
+            while (rs.next()){
+                DocNameDatabase = rs.getString("firstName") + " " + rs.getString("lastName");
+                if (doctorname.equals(DocNameDatabase)){
+                    return rs.getInt("id");
+                }
+            }
+
+            return 0;
 
         }
     }
@@ -52,29 +79,27 @@ public class BookingDaoImpl {
         }
     }
 
-    public Booking getBooking(Integer eventID) throws SQLException{
-        String sql = "SELECT * FROM " + TABLE_NAME + " WHERE eventID = ?";
+    public ArrayList<String> getBookingList(Integer doctorID) throws SQLException{
+        String sql = "SELECT * FROM " + TABLE_NAME + " WHERE doctorID = ?";
+        ArrayList<String> BookingList = new ArrayList<String>();
+
+        //System.out.println(sql);
         try (Connection connection = Database.getConnection();
 
              PreparedStatement stmt = connection.prepareStatement(sql);) {
-            stmt.setInt(1, eventID);
+            stmt.setInt(1, doctorID);
             try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next())  {
-                    Booking booking = new Booking();
-                    booking.setEventID(rs.getInt("eventID"));
-                    booking.setEventName(rs.getString("eventName"));
-                    booking.setEventStart(rs.getString("eventStart"));
-                    booking.setEventEnd(rs.getString("eventEnd"));
-                    booking.setEventDetails(rs.getString("eventDetails"));
-                    booking.setUserID(rs.getInt("userID"));
-                    booking.setDoctorID(rs.getInt("doctorID"));
-//                    System.out.println(user.toString());
-                    return booking;
+                while (rs.next())  {
+                    BookingList.add(rs.getString("userID") + " " + rs.getString("eventStart"));
+
+
                 }
-                return null;
+                return BookingList;
             }
         }
     }
+
+
 
     public Booking updateBooking(Integer eventID, String eventName, String eventStart, String eventEnd, String eventDetails, Integer userID, Integer doctorID) throws SQLException{
         String sql = "UPDATE " + TABLE_NAME + " SET eventName = ?, eventStart = ?, eventEnd = ?, eventDetails = ?, userID = ?, doctorID = ?";
@@ -119,8 +144,8 @@ public class BookingDaoImpl {
     }
 
     public ArrayList<String> getDoctorNamesAndIDs() throws SQLException{
-        String sql = "SELECT username FROM " + TABLE_NAME2 + " WHERE permission = ?";
-        ArrayList<String> DocNameList = new ArrayList<String>();
+        String sql = "SELECT * FROM " + TABLE_NAME2 + " WHERE permission = ?";
+        ArrayList<String> DocNameList = new ArrayList<>();
 
         try (Connection connection = Database.getConnection();
              PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -129,8 +154,8 @@ public class BookingDaoImpl {
             ResultSet rs = stmt.executeQuery();
             //Doc
             while (rs.next()){
-                DocNameList.add(rs.getString("username"));
-                System.out.println(rs.getString("username"));
+                DocNameList.add(rs.getString("firstName") + " " + rs.getString("lastName"));
+                System.out.println(rs.getString("firstName") + " " + rs.getString("lastName"));
             }
 
             return DocNameList;
@@ -139,5 +164,4 @@ public class BookingDaoImpl {
 
 
     }
-
 }

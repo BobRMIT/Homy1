@@ -30,15 +30,6 @@ class BookingPage extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
 
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
         primarySwatch: Colors.blue,
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
@@ -58,8 +49,7 @@ class _MyHomePageState extends State<MyHomePage> {
   TextEditingController dateController = TextEditingController();
   TextEditingController timeController = TextEditingController();
 
-  List<String> items = //DoctorList() as List<String>;
-  ['123','321','456'];
+  List<String> items = ['123','321','456'];
 
   String? selectedValue;
 
@@ -67,13 +57,27 @@ class _MyHomePageState extends State<MyHomePage> {
     return  dateController.text;
   }
 
+  Future<void> DoctorListF() async {
+    final Data = await http.get(
+        Uri.parse("http://localhost:8080/booking/getDoctors/"));
+    String info = Data.body;
+    info = info.replaceAll(']','').replaceAll('[','').replaceAll(',','');
+    info = info.substring(1, info.length-1);
+
+    setState(() {
+      items = info.split('""');
+    });
+  }
+
+
+
+
   @override
   void initState() {
     super.initState();
     dateController.text = ""; //set the initial value of text field
     timeController.text = "";
-
-
+    WidgetsBinding.instance.addPostFrameCallback((_) {DoctorListF();});           // This line is magical, calling the future to create the present, absolutely beautiful
 
   }
 
@@ -88,8 +92,7 @@ class _MyHomePageState extends State<MyHomePage> {
         .size
         .width;
 
-    //var data = http.get(Uri.parse("http://localhost:8080/booking/getDoctors/"));
-
+/*
     Future<void> DoctorList() async {
       final Data = await http.get(
           Uri.parse("http://localhost:8080/booking/getDoctors/"));
@@ -100,14 +103,8 @@ class _MyHomePageState extends State<MyHomePage> {
         setState(() {
           items = info.split('""');
         });
-
-       // if (Data.body.isEmpty) {
-        //    DoctorListS = "";
-       // }
-          //return [""];
-        //_setTextState("Failed to connect to API");
       }
-    //return [DoctorListS];s
+*/
 
     Future<void> BookBookBook() async {
 
@@ -124,10 +121,11 @@ class _MyHomePageState extends State<MyHomePage> {
           'eventID:' : "",
           'eventName': "Booking",
           'eventStart': getDate(),
-          'eventEnd': "2",
+          'eventEnd': timeController.text,
           'eventDetails': "Desc",
           'userID': userID['id'].toString(),
-          'doctorID': '1'//selectedValue.toString()
+          'doctorID': "0",
+          'doctorName': selectedValue.toString() //selectedValue.toString()
         }),
       );
     }
@@ -277,7 +275,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
           ElevatedButton(
 
-            onPressed: DoctorList, // add action for save later to add to calendar
+            onPressed: (){} ,//DoctorList, // add action for save later to add to calendar
             style: ElevatedButton.styleFrom(
                 fixedSize: Size(FrameWidth * 0.6, FrameHeight*0.1),
                 primary: Colors.blue,

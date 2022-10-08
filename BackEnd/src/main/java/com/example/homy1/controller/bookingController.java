@@ -55,8 +55,8 @@ public class bookingController {
                 .toUri();
 
         //Send location in response
-        System.out.println(ResponseEntity.created(location).body(0));
-        System.out.println(ResponseEntity.created(location).build());
+        //System.out.println(ResponseEntity.created(location).body(0));
+        //System.out.println(ResponseEntity.created(location).build());
         return ResponseEntity.created(location).build();
     }
 
@@ -87,21 +87,21 @@ public class bookingController {
                     .toUri();
 
             //Send location in response
-            System.out.println(ResponseEntity.created(location).body(0));
-            System.out.println(ResponseEntity.created(location).build());
+            ///System.out.println(ResponseEntity.created(location).body(0));
+            //System.out.println(ResponseEntity.created(location).build());
             return ResponseEntity.created(location).build();
         }
 
     @GetMapping(value ="/getDoctors/", produces = "application/json")
     public ArrayList<String> getDoctors() throws SQLException{
-        System.out.print(bookingDao.getDoctorNamesAndIDs());
+        //System.out.print(bookingDao.getDoctorNames());
 
-        return bookingDao.getDoctorNamesAndIDs();
+        return bookingDao.getDoctorNames();
     }
 
     @GetMapping(value ="/GetBookingList/{doctorsID}", produces = "application/json")
     public ArrayList<String> getBooking(@PathVariable Integer doctorsID) throws SQLException{
-        System.out.print(bookingDao.getBookingList(doctorsID));
+        //System.out.print(bookingDao.getBookingList(doctorsID));
 
         return bookingDao.getBookingList(doctorsID);
     }

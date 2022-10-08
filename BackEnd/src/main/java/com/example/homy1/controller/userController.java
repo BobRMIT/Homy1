@@ -71,8 +71,8 @@ public class userController {
                 .toUri();
 
         //Send location in response
-        System.out.println(ResponseEntity.created(location).body(0));
-        System.out.println(ResponseEntity.created(location).build());
+        //System.out.println(ResponseEntity.created(location).body(0));
+        //System.out.println(ResponseEntity.created(location).build());
         return ResponseEntity.created(location).build();
     }
 
@@ -91,10 +91,10 @@ public class userController {
         n = userDao.getUser(username, password);
 
         if(n == null) {
-            System.out.println("No user found");
+            //System.out.println("No user found");
         }
         else{
-            System.out.println(n.toString());
+            //System.out.println(n.toString());
         }
 
         return "Searching User";

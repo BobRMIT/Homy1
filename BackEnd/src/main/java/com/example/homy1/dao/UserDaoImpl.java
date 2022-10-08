@@ -63,7 +63,7 @@ public class UserDaoImpl{
                     user.setFirstName(rs.getString("firstName"));
                     user.setLastName(rs.getString("lastName"));
                     user.setPermission(rs.getString("permission"));
-                    System.out.println(user.toString());
+                    //System.out.println(user.toString());
                     return user;
                 }
                 return null;

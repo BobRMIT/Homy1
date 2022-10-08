@@ -31,29 +31,30 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<String> entries = ['A', 'B', 'C'];
+  List<String> entries = [];
 
 
   Future<void> BookingsList() async {
     LocalStorage storage = LocalStorage('key');
     Map<String, dynamic> userInfo = jsonDecode(storage.getItem('getID'));
-    print(userInfo['id']);
+    print(userInfo['permission']);
 
-    final Data = await http.get(
-        Uri.parse("http://localhost:8080/booking/GetBookingList/${userInfo['id']}/")
+    if (userInfo['permission'] == 'Doctor') {
+      final Data = await http.get(
+        Uri.parse("http://localhost:8080/booking/GetBookingList/${userInfo['id']}/"));
+        String info = Data.body.toString();
 
-    );
+        info = info.replaceAll(']','').replaceAll('[','').replaceAll(',','');
+        info = info.substring(1, info.length-1);
 
-    String info = Data.body.toString();
-    print(info);
-    info = info.replaceAll(']','').replaceAll('[','').replaceAll(',','');
-    print(info);
-    info = info.substring(1, info.length-1);
-    print(info);
+        setState(() {
+        entries = info.split('""');
+        });
+    }else{
 
-    setState(() {
-      entries = info.split('""');
-    });
+    }
+
+
   }
 
 

@@ -54,7 +54,7 @@ public class BookingDaoImpl {
         try (Connection connection = Database.getConnection();
              PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, "Doctor");
-            System.out.println(stmt);
+            //System.out.println(stmt);
             ResultSet rs = stmt.executeQuery();
             //Doc
             while (rs.next()){
@@ -90,7 +90,9 @@ public class BookingDaoImpl {
             stmt.setInt(1, doctorID);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next())  {
-                    BookingList.add(rs.getString("userID") + " " + rs.getString("eventStart"));
+                    getFullNameFromID(rs.getString("userID"));
+
+                    BookingList.add( getFullNameFromID(rs.getString("userID")) + " " + rs.getString("eventStart"));
 
 
                 }
@@ -143,19 +145,19 @@ public class BookingDaoImpl {
 
     }
 
-    public ArrayList<String> getDoctorNamesAndIDs() throws SQLException{
+    public ArrayList<String> getDoctorNames() throws SQLException{
         String sql = "SELECT * FROM " + TABLE_NAME2 + " WHERE permission = ?";
         ArrayList<String> DocNameList = new ArrayList<>();
 
         try (Connection connection = Database.getConnection();
              PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, "Doctor");
-            System.out.println(stmt);
+            //System.out.println(stmt);
             ResultSet rs = stmt.executeQuery();
             //Doc
             while (rs.next()){
                 DocNameList.add(rs.getString("firstName") + " " + rs.getString("lastName"));
-                System.out.println(rs.getString("firstName") + " " + rs.getString("lastName"));
+                //System.out.println(rs.getString("firstName") + " " + rs.getString("lastName"));
             }
 
             return DocNameList;
@@ -163,5 +165,24 @@ public class BookingDaoImpl {
         }
 
 
+
+        }
+
+    private String getFullNameFromID(String ID) throws SQLException{
+        String sql = "SELECT * FROM " + TABLE_NAME2 + " WHERE id = ?";
+
+        try (Connection connection = Database.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, ID);
+            //System.out.println(stmt);
+            ResultSet rs = stmt.executeQuery();
+            rs.next();
+            return rs.getString("firstName") + " " + rs.getString("lastName");
+
+        }
+
     }
+
 }
+
+

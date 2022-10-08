@@ -48,14 +48,31 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   TextEditingController dateController = TextEditingController();
   TextEditingController timeController = TextEditingController();
+  final errorTxtController = TextEditingController();
+  Color selectionColor = Colors.red;
 
-  List<String> items = ['123','321','456'];
-
+  List<String> items = [];
   String? selectedValue;
+
 
   String getDate() {
     return  dateController.text;
   }
+
+  void _setTextState(String error) {
+    setState(() {
+      selectionColor = Colors.red;
+      errorTxtController.text = error;
+    });
+  }
+
+  void _setTextStateSuc(String error) {
+    setState(() {
+      selectionColor = Colors.green;
+      errorTxtController.text = error;
+    });
+  }
+
 
   Future<void> DoctorListF() async {
     final Data = await http.get(
@@ -70,13 +87,13 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
 
-
-
   @override
   void initState() {
     super.initState();
     dateController.text = ""; //set the initial value of text field
     timeController.text = "";
+    errorTxtController.text = "";
+    //selectedValue = "";
     WidgetsBinding.instance.addPostFrameCallback((_) {DoctorListF();});           // This line is magical, calling the future to create the present, absolutely beautiful
 
   }
@@ -92,68 +109,70 @@ class _MyHomePageState extends State<MyHomePage> {
         .size
         .width;
 
-/*
-    Future<void> DoctorList() async {
-      final Data = await http.get(
-          Uri.parse("http://localhost:8080/booking/getDoctors/"));
-        String info = Data.body;
-        info = info.replaceAll(']','').replaceAll('[','').replaceAll(',','');
-        info = info.substring(1, info.length-1);
 
-        setState(() {
-          items = info.split('""');
-        });
-      }
-*/
 
-    Future<void> BookBookBook() async {
+    Future<void> ChecksCompleteBook() async {
 
       LocalStorage storage = LocalStorage('key');
       Map<String, dynamic> userID = jsonDecode(storage.getItem('getID'));
 
+      try{
+        final response = await http.post(
+          Uri.parse('http://localhost:8080/booking/create/'),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: jsonEncode(<String, String>{
+            'eventID:' : "",
+            'eventName': "Booking",
+            'eventStart': getDate(),
+            'eventEnd': timeController.text,
+            'eventDetails': "Desc",
+            'userID': userID['id'].toString(),
+            'doctorID': "0",
+            'doctorName': selectedValue.toString()
+          }),
+        );
+        //print(response.statusCode);
 
-      final Data = await  http.post(
-        Uri.parse('http://localhost:8080/booking/create/'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(<String, String>{
-          'eventID:' : "",
-          'eventName': "Booking",
-          'eventStart': getDate(),
-          'eventEnd': timeController.text,
-          'eventDetails': "Desc",
-          'userID': userID['id'].toString(),
-          'doctorID': "0",
-          'doctorName': selectedValue.toString() //selectedValue.toString()
-        }),
-      );
+        if (response.statusCode == 201) {
+          _setTextStateSuc('Success');
+        } else {
+          _setTextState("error: ${response.statusCode}");
+        }
+      } on Exception catch (_) {
+        _setTextState("Failed to connect to API");
+        //errorTxtController.text = "Failed to connect to API";
+        throw Exception('Failed to connect to API');
+      }
+    }
+
+
+    Future<void> BookBookBook()  async {
+      if ((dateController.text.isNotEmpty)
+          && (timeController.text.isNotEmpty)
+          && (selectedValue != null)){ //(selectedValue.toString() != 'null')){
+
+        ChecksCompleteBook();
+
+        } else {
+          _setTextState("Blank Fields");
+        }
     }
 
 
 
 
-
-
-    //String? selectedValue;
     final bool readOnly = false;
     final f = new DateFormat('yyyy-MM-dd hh:mm');
 
 
 
-
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
 
 
       appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
+
         title: const Text("Booking"),
       ),
       body: Center(
@@ -162,9 +181,6 @@ class _MyHomePageState extends State<MyHomePage> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
 
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        // child: Column(
 
           SizedBox(height: FrameHeight*0.1),
         DropdownButtonHideUnderline(
@@ -194,7 +210,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
             onChanged: (value) {
               setState(() {
-                print("change");
+
                 selectedValue = value as String;
               });
             },
@@ -228,7 +244,7 @@ class _MyHomePageState extends State<MyHomePage> {
               );
 
               if (pickedDate != null) {
-                String formattedDate = DateFormat('yyyy-MM-dd').format(
+                String formattedDate = DateFormat('dd-MM-yyyy').format(
                     pickedDate); // format date in required form here we use yyyy-MM-dd that means time is removed
                 setState(() {
                   dateController.text = formattedDate;//set foratted date to TextField value.
@@ -269,23 +285,18 @@ class _MyHomePageState extends State<MyHomePage> {
                   fontSize: 20,
                   fontWeight: FontWeight.bold)
           ),
-          child: const Text('Save'),),
+          child: const Text('Book'),),
 
           SizedBox(height: FrameHeight*0.1),
 
-          ElevatedButton(
+          Align( alignment: const Alignment(-0.6,-1),
+            child:
+            SizedBox(
 
-            onPressed: (){} ,//DoctorList, // add action for save later to add to calendar
-            style: ElevatedButton.styleFrom(
-                fixedSize: Size(FrameWidth * 0.6, FrameHeight*0.1),
-                primary: Colors.blue,
-                onPrimary: Colors.black,
-                padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
-                textStyle: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold)
+              child: Text(errorTxtController.text,
+                style: TextStyle(fontWeight: FontWeight.bold, color: selectionColor),
+              ),
             ),
-            child: const Text('Initiate'),
           ),
     ],
     ),

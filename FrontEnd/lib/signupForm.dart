@@ -99,59 +99,58 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> _SigningUp() async {
+    try {
+      if ((getUsername().isNotEmpty) && (getPassword().isNotEmpty) &&
+          (getFirstName().isNotEmpty) && (getLastName().isNotEmpty)) {
+        if (!getUsername().contains(' ')) {
+          if (!getPassword().contains(' ')) {
+            String username = getUsername();
+            final CheckUsername = await http.get(
+                Uri.parse("http://localhost:8080/users/check/$username/"));
+            print(CheckUsername.body);
 
-    if ((getUsername().isNotEmpty) && (getPassword().isNotEmpty) && (getFirstName().isNotEmpty) && (getLastName().isNotEmpty)){
-      if (!getUsername().contains(' ')){
-        if (!getPassword().contains(' ')){
-          String username = getUsername();
-          final CheckUsername = await http.get(Uri.parse("http://localhost:8080/users/check/$username/"));
-          //print(CheckUsername.body);
+            if (CheckUsername.body == "false") {
+              print("adding new user");
+              final response = await
+              http.post(
+                Uri.parse('http://localhost:8080/users/create/'),
+                headers: <String, String>{
+                  'Content-Type': 'application/json; charset=UTF-8',
+                },
+                body: jsonEncode(<String, String>{
+                  'username': getUsername(),
+                  'password': getPassword(),
+                  'firstName': getFirstName(),
+                  'lastName': getLastName(),
+                  'permission': 'User'
+                }),
+              );
 
-          if (CheckUsername.body == "false") {
-            print("adding new user");
-            final response = await
-            http.post(
-              Uri.parse('http://localhost:8080/users/create/'),
-              headers: <String, String>{
-                'Content-Type': 'application/json; charset=UTF-8',
-              },
-              body: jsonEncode(<String, String>{
-                'username': getUsername(),
-                'password': getPassword(),
-                'firstName': getFirstName(),
-                'lastName': getLastName(),
-                'permission': 'User'
-              }),
-            );
-
-            if (response.statusCode == 201) {
-              _setTextStateSuc('Success');
+              if (response.statusCode == 201) {
+                _setTextStateSuc('Success');
+              } else {
+                print("error1");
+                print(response.statusCode);
+                _setTextStateError("error: " + response.statusCode.toString());
+              }
             } else {
-              //print("error1");
-              //print(response.statusCode);
-              _setTextStateError("error: ${response.statusCode}");
+              _setTextStateError("Username Already Taken");
             }
-          }else{
-            _setTextStateError("Username Already Taken");
+          } else {
+            _setTextStateError("Password Contains Whitespace");
           }
-        }else{
-          _setTextStateError("Password Contains Whitespace");
+        } else {
+          _setTextStateError("Username Contains Whitespace");
         }
-      }else{
-        _setTextStateError("Username Contains Whitespace");
+      } else {
+        _setTextStateError("Empty Fields");
       }
-
-    }else{
-      _setTextStateError("Empty Fields");
+    } on Exception catch (_) {
+      _setTextStateError("Failed to connect to API");
+      //errorTxtController.text = "Failed to connect to API";
+      //throw Exception('Failed to connect to API');
     }
   }
-
-
-  _HomeScreen(){
-    //print("To home page");
-    HomePage.main();
-  }
-
 
 
 
@@ -184,37 +183,12 @@ class _MyHomePageState extends State<MyHomePage> {
         // in the middle of the parent.
         child: Column(
 
-
-
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
 
             //SizedBox(height: FrameHeight*0.2),
             SizedBox(height: FrameHeight*0.1),
 
-            // TextFormField(
-            //   controller: usernameController,
-            //   keyboardType: TextInputType.emailAddress, // Use email input type for emails.
-            //   decoration: const InputDecoration(
-            //       contentPadding: EdgeInsets.symmetric(horizontal: 40.0),
-            //       hintText: 'Username',
-            //       labelText: 'Username'
-            //   ),
-            // ),
 
             Container(
               padding: const EdgeInsets.all(10),
@@ -246,15 +220,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
             ),
-            // TextFormField(
-            //   controller: passwordController,
-            //   keyboardType: TextInputType.emailAddress, // Use email input type for emails.
-            //   decoration: const InputDecoration(
-            //       contentPadding: EdgeInsets.symmetric(horizontal: 40.0),
-            //       hintText: 'Password',
-            //       labelText: 'Password',
-            //   ),
-            // ),
 
             Container(
               padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
@@ -271,7 +236,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
 
             SizedBox(height: FrameHeight*0.05),
-
 
             Align( alignment: const Alignment(-0.9,-1),
               child:

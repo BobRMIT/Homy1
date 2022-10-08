@@ -88,7 +88,7 @@ public class UserDaoImpl{
     }
 
     public boolean removeUser(String username, String password) throws SQLException{
-        String sql = "DELETE " + TABLE_NAME + " WHERE username = ?, password = ?";
+        String sql = "DELETE  FROM " + TABLE_NAME + " WHERE username = ? AND password = ?";
         try (Connection connection = Database.getConnection();
              PreparedStatement stmt = connection.prepareStatement(sql);) {
             stmt.setString(1, username);

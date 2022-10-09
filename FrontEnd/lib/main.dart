@@ -207,7 +207,6 @@ class _MyHomePageState extends State<MyHomePage> {
               errorTxtController.text,
               style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.red),
             ),
-
           ],
         ),
       ), // This trailing comma makes auto-formatting nicer for build methods.

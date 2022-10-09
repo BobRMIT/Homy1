@@ -16,6 +16,7 @@ public class UserDaoImplTest {
     @BeforeAll
     public void init() throws SQLException {
 
+        //userDao.createUser(null, "Pan", "C", "panc", "a", "User");
         userDao.setup();
 
     }

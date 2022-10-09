@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:intl/intl.dart';
 
+
 // class BookingPage extends StatelessWidget{
 //   @override
 //   Widget build(BuildContext context) => Scaffold(
@@ -51,6 +52,10 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+
+  DateTime selectedDate = DateTime.now();
+  // TimeOfDay selectedTime = TimeOfDay(hour: 00, minute: 00);
+  // TimeOfDay finishTime = TimeOfDay(hour: 24, minute: 59);
   TextEditingController dateController = TextEditingController();
   TextEditingController timeController = TextEditingController();
 
@@ -180,6 +185,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
         ),
         ),
+
           Container(
             // padding:const EdgeInsets.all(15),
             padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
@@ -187,13 +193,29 @@ class _MyHomePageState extends State<MyHomePage> {
             child:Center(
               child: TextField(
 
-                controller: timeController, //editing controller of this TextField
-                decoration: const InputDecoration(
 
+                controller: timeController, //editing controller of this TextField
+                decoration: InputDecoration(
                     icon: Icon(Icons.timer_rounded), //icon of text field
-                    labelText: "Enter Time" //label text of field
-                ),
-              ),
+                    labelText: "Enter Time"//label text of field
+                    ),
+                  readOnly: true,
+                  onTap: () async {
+                    var time = await showTimePicker(
+                                context: context,
+                                initialTime: TimeOfDay.now(),
+                                );
+                  if (time != null) {
+                    setState(() {
+                      // String formattedTime = DateFormat('hh:mm:ss').format(context); // format date in required form here we use yyyy-MM-dd that means time is removed
+                      timeController.text = time.format(context);
+                      // formattedTime; //set foratted date to TextField value.
+                    });
+                  }
+                },
+
+
+          ),
             ),
           ),
           SizedBox(height: FrameHeight*0.1),

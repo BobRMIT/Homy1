@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'LogInForm.dart' as loginForm;
 import 'package:http/http.dart' as http;
 import 'signupForm.dart' as signupForm;
+import 'adminSignupForm.dart' as adminSignupForm;
 
 
 void main() {
@@ -97,7 +98,7 @@ class _MyHomePageState extends State<MyHomePage> {
           //Next Window
         }
         else if (mode == 0){
-          signupForm.main();
+          adminSignupForm.main();
         }
 
 

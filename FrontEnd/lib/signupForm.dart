@@ -52,9 +52,8 @@ class _MyHomePageState extends State<MyHomePage> {
   final lastNameController = TextEditingController();
   final passwordController = TextEditingController();
   final errorTxtController = TextEditingController();
+  //final BoolCheck = BooleanController()
   Color selectionColor = Colors.red;
-
-
 
 
   String getUsername() {
@@ -98,6 +97,19 @@ class _MyHomePageState extends State<MyHomePage> {
     MainPage.main(); //Going back to menu
   }
 
+  bool VisChecking(status){
+    return !status;
+    //_isHidden = !_isHidden
+  }
+
+
+  /*
+  * Creating user function
+  * Error checks box inputs:
+  *         No text box can be empty
+  *         Username and Password cannot contain whitespace
+  *         Username sent to API to check if it already exists
+  * */
   Future<void> _SigningUp() async {
     try {
       if ((getUsername().isNotEmpty) && (getPassword().isNotEmpty) &&
@@ -106,15 +118,15 @@ class _MyHomePageState extends State<MyHomePage> {
           if (!getPassword().contains(' ')) {
             String username = getUsername();
             final CheckUsername = await http.get(
-                Uri.parse("http://localhost:8080/users/check/$username/"));
-            print(CheckUsername.body);
+                Uri.parse("http://localhost:8080/users/check/$username/")); // checking if username already exists
+                //print(CheckUsername.body);
 
             if (CheckUsername.body == "false") {
-              print("adding new user");
+                  //print("adding new user");
               final response = await
               http.post(
-                Uri.parse('http://localhost:8080/users/create/'),
-                headers: <String, String>{
+                Uri.parse('http://localhost:8080/users/create/'),       // Creating user once if username is available
+                headers: <String, String>{                              // creating json to send to API
                   'Content-Type': 'application/json; charset=UTF-8',
                 },
                 body: jsonEncode(<String, String>{
@@ -127,11 +139,9 @@ class _MyHomePageState extends State<MyHomePage> {
               );
 
               if (response.statusCode == 201) {
-                _setTextStateSuc('Success');
+                _setTextStateSuc('Success');    //Created user if all clear
               } else {
-                print("error1");
-                print(response.statusCode);
-                _setTextStateError("error: " + response.statusCode.toString());
+                _setTextStateError("error: ${response.statusCode}"); //API functionality failed
               }
             } else {
               _setTextStateError("Username Already Taken");
@@ -146,7 +156,7 @@ class _MyHomePageState extends State<MyHomePage> {
         _setTextStateError("Empty Fields");
       }
     } on Exception catch (_) {
-      _setTextStateError("Failed to connect to API");
+      _setTextStateError("Failed to connect to API"); //API connection failed
       //errorTxtController.text = "Failed to connect to API";
       //throw Exception('Failed to connect to API');
     }
@@ -161,6 +171,7 @@ class _MyHomePageState extends State<MyHomePage> {
     var FrameHeight = MediaQuery.of(context).size.width;
 
     bool _isHidden = true;
+
 
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
@@ -228,7 +239,7 @@ class _MyHomePageState extends State<MyHomePage> {
             Container(
               padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
               child: TextField(
-                obscureText: true,
+                obscureText: _isHidden,
                 controller: passwordController,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
@@ -237,12 +248,14 @@ class _MyHomePageState extends State<MyHomePage> {
                   prefixIcon: const Icon(Icons.lock),
                   suffixIcon: IconButton(
                       icon: Icon(
-                          _isHidden
-                              ? Icons.visibility
-                              : Icons.visibility_off ),
+                          VisChecking(_isHidden) ?
+                          Icons.visibility_off : Icons.visibility  ),
                       onPressed: () {
+                        VisChecking(_isHidden);
                         setState(() {
-                          _isHidden = !_isHidden;
+
+                          _isHidden = !VisChecking(_isHidden);
+
                         });
                       }
                   ),
@@ -285,9 +298,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
             ElevatedButton(
 
-              onPressed: _BackToMenu,
+              onPressed: _BackToMenu, // going back to menu
               style: ElevatedButton.styleFrom(
-                  fixedSize: Size(FrameWidth * 0.6, FrameHeight*0.1),
+                  fixedSize: Size(FrameWidth * 0.6, FrameHeight * 0.1),
                   primary: Colors.blue,
                   onPrimary: Colors.black,
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
@@ -304,3 +317,4 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+

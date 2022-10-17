@@ -7,10 +7,15 @@ import java.util.Properties;
 
 public class Database {
     static String username = "root";
-        static String password = "Password1";
+    static String password = "Password1";
 
     private static final String DB_URL = "jdbc:mysql://localhost:3306/homy1";
 
+    /**
+     * checking and getting connection from database
+     * @return connection to SQL database
+     * @throws SQLException
+     */
     public static Connection getConnection() throws SQLException {
         Properties connectionProps = new Properties();
         connectionProps.put("user", username);

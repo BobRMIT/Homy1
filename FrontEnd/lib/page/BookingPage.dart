@@ -6,18 +6,6 @@ import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:localstorage/localstorage.dart';
 
-// class BookingPage extends StatelessWidget{
-//   @override
-//   Widget build(BuildContext context) => Scaffold(
-//     appBar: AppBar(
-//       title: Text('Booking'),
-//     ),
-//     body: Center(child: Text('Booking', style: TextStyle(fontSize: 60),)),
-//   );
-// }
-
-
-
 
 class BookingPage extends StatelessWidget {
   const BookingPage({Key? key}) : super(key: key);
@@ -50,40 +38,51 @@ class _MyHomePageState extends State<MyHomePage> {
   TextEditingController timeController = TextEditingController();
   final errorTxtController = TextEditingController();
   Color selectionColor = Colors.red;
-
-  List<String> items = [];
-  String? selectedValue;
+  late bool buttonDisabled;
+  List<String> items = []; // list of all doctors
+  String? selectedValue;    // selected value of doctor from list
 
 
   String getDate() {
     return  dateController.text;
   }
 
-  void _setTextState(String error) {
+  ///Setting error text to error
+  void _setTextState(String error) { // red error
     setState(() {
       selectionColor = Colors.red;
       errorTxtController.text = error;
     });
   }
 
-  void _setTextStateSuc(String error) {
+  ///Setting error text to success
+  void _setTextStateSuc(String success) { // green success
     setState(() {
       selectionColor = Colors.green;
-      errorTxtController.text = error;
+      errorTxtController.text = success;
     });
   }
 
-
+  ///getting list of doctors from API
   Future<void> DoctorListF() async {
+
     final Data = await http.get(
         Uri.parse("http://localhost:8080/booking/getDoctors/"));
-    String info = Data.body;
-    info = info.replaceAll(']','').replaceAll('[','').replaceAll(',','');
-    info = info.substring(1, info.length-1);
 
-    setState(() {
-      items = info.split('""');
-    });
+    String info = Data.body;
+    info = info.replaceAll(']','').replaceAll('[','').replaceAll(',',''); // splitting json into usable list
+
+    if (info.isEmpty){
+      _setTextState("No Doctors Available");
+      setState(() {
+        buttonDisabled = true;
+      });
+    }else {
+      info = info.substring(1, info.length - 1);
+      setState(() {
+        items = info.split('""'); // for initial loading, makes list load with all doctors
+      });
+    }
   }
 
 
@@ -93,9 +92,8 @@ class _MyHomePageState extends State<MyHomePage> {
     dateController.text = ""; //set the initial value of text field
     timeController.text = "";
     errorTxtController.text = "";
-    //selectedValue = "";
     WidgetsBinding.instance.addPostFrameCallback((_) {DoctorListF();});           // This line is magical, calling the future to create the present, absolutely beautiful
-
+    buttonDisabled = false;
   }
 
   @override
@@ -110,14 +108,14 @@ class _MyHomePageState extends State<MyHomePage> {
         .width;
 
 
-
+    ///creates new booking from given data
     Future<void> ChecksCompleteBook() async {
 
       LocalStorage storage = LocalStorage('key');
-      Map<String, dynamic> userID = jsonDecode(storage.getItem('getID'));
+      Map<String, dynamic> userID = jsonDecode(storage.getItem('getID')); //getting user ID from cache
 
       try{
-        final response = await http.post(
+        final response = await http.post(                     //sending data to API
           Uri.parse('http://localhost:8080/booking/create/'),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
@@ -133,7 +131,6 @@ class _MyHomePageState extends State<MyHomePage> {
             'doctorName': selectedValue.toString()
           }),
         );
-        //print(response.statusCode);
 
         if (response.statusCode == 201) {
           _setTextStateSuc('Success');
@@ -143,12 +140,12 @@ class _MyHomePageState extends State<MyHomePage> {
       } on Exception catch (_) {
         _setTextState("Failed to connect to API");
         //errorTxtController.text = "Failed to connect to API";
-        throw Exception('Failed to connect to API');
+        //throw Exception('Failed to connect to API');
       }
     }
 
-
-    Future<void> BookBookBook()  async {
+    ///Booking function checking
+    Future<void> BookingInit()  async {
       if ((dateController.text.isNotEmpty)
           && (timeController.text.isNotEmpty)
           && (selectedValue != null)){ //(selectedValue.toString() != 'null')){
@@ -162,17 +159,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
 
 
-
-    final bool readOnly = false;
-    final f = new DateFormat('yyyy-MM-dd hh:mm');
-
-
-
     return Scaffold(
 
-
       appBar: AppBar(
-
         title: const Text("Booking"),
       ),
       body: Center(
@@ -181,12 +170,11 @@ class _MyHomePageState extends State<MyHomePage> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
 
-
           SizedBox(height: FrameHeight*0.1),
+
         DropdownButtonHideUnderline(
           child: DropdownButton2(
-            hint: Text(
-              'Select a Doctor',
+            hint: Text('Select a Doctor',
               style: TextStyle(
                 fontSize: 14,
                 color: Theme
@@ -208,10 +196,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 .toList(),
             value: selectedValue,
 
-            onChanged: (value) {
-              setState(() {
-
-                selectedValue = value as String;
+            onChanged: (value) {setState(() {
+                selectedValue = value as String; // changing drop down box value
               });
             },
             buttonHeight: 40,
@@ -244,10 +230,9 @@ class _MyHomePageState extends State<MyHomePage> {
               );
 
               if (pickedDate != null) {
-                String formattedDate = DateFormat('dd-MM-yyyy').format(
-                    pickedDate); // format date in required form here we use yyyy-MM-dd that means time is removed
+                String formattedDate = DateFormat('dd-MM-yyyy').format(pickedDate); // format date in required form here we use yyyy-MM-dd that means time is removed
                 setState(() {
-                  dateController.text = formattedDate;//set foratted date to TextField value.
+                  dateController.text = formattedDate;//set formatted date to TextField value.
                 });
               }
             },
@@ -263,7 +248,7 @@ class _MyHomePageState extends State<MyHomePage> {
               child: TextField(
 
                 controller: timeController, //editing controller of this TextField
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
 
                     icon: Icon(Icons.timer_rounded), //icon of text field
                     labelText: "Enter Time" //label text of field
@@ -290,7 +275,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
         ElevatedButton(
 
-          onPressed: BookBookBook, // add action for save later to add to calendar
+          onPressed: buttonDisabled ? null : BookingInit, // add action for save later to add to calendar
           style: ElevatedButton.styleFrom(
               fixedSize: Size(FrameWidth * 0.6, FrameHeight*0.1),
               primary: Colors.blue,

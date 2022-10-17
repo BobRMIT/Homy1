@@ -21,15 +21,27 @@ public class userController {
     private UserDaoImpl userDao;
     private User user;
 
+    /**
+     * sets us user database
+     * @return returns setup complete string if successful
+     * @throws SQLException
+     */
     @RequestMapping("/")
     public String index() throws SQLException {
         userDao = new UserDaoImpl();
         userDao.setup();
-        System.out.println("tested");
+        //System.out.println("tested");
         return "Setup Complete";
 
     }
 
+    /**
+     * endpoint to search for user in database given username and password
+     * @param username username of desired user
+     * @param password password of desired user
+     * @return user object of given credentials
+     * @throws SQLException
+     */
     @GetMapping(value = "/{username}/{password}/", produces = "application/json")
     public User get(@PathVariable String username, @PathVariable String password) throws SQLException {
         user = userDao.getUser(username, password);
@@ -37,7 +49,12 @@ public class userController {
         return user;
     }
 
-
+    /**
+     * Search for existing username in database
+     * @param username the username to search for
+     * @return boolean true if username exists, false if it does not exist
+     * @throws SQLException
+     */
     @RequestMapping("check/{username}/")
     public Boolean checkUserExists(@PathVariable String username) throws SQLException {
         System.out.println("looking for username: " + username);
@@ -46,7 +63,11 @@ public class userController {
     }
 
 
-
+    /**
+     * Creating user in database
+     * @return ResponseEntity
+     * @throws Exception
+     */
     @PostMapping(value = "/create", consumes = "application/json", produces =  "application/json")
     public ResponseEntity<User> addUser(
             @RequestHeader(name = "X-COM-PERSIST", required = false) String headerPersist,
@@ -55,13 +76,11 @@ public class userController {
             throws Exception
     {
 
-
         //Generate resource id
         Integer id = userDao.getCount() + 1;
         user.setId(id);
 
         //add resource
-
         userDao.createUser(user.getId(), user.getFirstName(), user.getLastName(), user.getUsername(), user.getPassword(), user.getPermission());
 
         //Create resource location
@@ -70,12 +89,14 @@ public class userController {
                 .buildAndExpand(user.getId())
                 .toUri();
 
-        //Send location in response
-        //System.out.println(ResponseEntity.created(location).body(0));
-        //System.out.println(ResponseEntity.created(location).build());
         return ResponseEntity.created(location).build();
     }
 
+    /**
+     *
+     * @return
+     * @throws SQLException
+     */
     @RequestMapping("/test")
     public String searchUser() throws SQLException {
         User n = new User();
@@ -83,6 +104,14 @@ public class userController {
 
         return "It works!";
     }
+
+    /**
+     * TBA
+     * @param username
+     * @param password
+     * @return
+     * @throws SQLException
+     */
     @PostMapping("/search")
     @ResponseBody
     public String searchUser(@RequestParam String username, @RequestParam String password) throws SQLException {
@@ -96,10 +125,7 @@ public class userController {
         else{
             //System.out.println(n.toString());
         }
-
         return "Searching User";
-
-
-}
+    }
 
 }

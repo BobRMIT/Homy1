@@ -18,20 +18,11 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    // _GetUserData();
+
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
 
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
         primarySwatch: Colors.blue,
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
@@ -69,11 +60,12 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+/// exit login screen
    _BackToMenu(){
-    //print("Back to menu screen");
     MainPage.main(); //Going back to menu
   }
 
+  ///Login method
   Future<void> _HomeScreen() async {
     String username = getUsername();
     String password = getPassword();
@@ -82,34 +74,31 @@ class _MyHomePageState extends State<MyHomePage> {
       if ((!username.contains(' ')) && (!password.contains(' '))) {
         try {
           final Data = await http.get(
-              Uri.parse("http://localhost:8080/users/$username/$password/"));
-              //print('stuff ${Data.body}');
-          if (Data.body.isEmpty) {
-            _setTextState("Invalid Credentials");
-            //print("User Not Found");
+              Uri.parse("http://localhost:8080/users/$username/$password/")); //sending login details to API
 
+          if (Data.body.isEmpty) {          //invalid credentials given
+            _setTextState("Invalid Credentials");
 
           } else if(Data.statusCode == 200) { //login successful
             //print(Data.body);
             LocalStorage storage = LocalStorage('key');
-            storage.setItem('getID', Data.body);
+            storage.setItem('getID', Data.body);          // saves user ID to Cache when logging in
             HomePage.main();
-            //Bookingv2.main();
 
-          }else {
+          }else { //error within API
             _setTextState("Fatal error, statusCode: ${Data.statusCode}");
           }
 
-        } on Exception catch (_) {
+        } on Exception catch (_) { // error connecting with API
           _setTextState("Failed to connect to API");
           //throw Exception('Failed to connect to API');
         }
       }else {
-        print("Whitespace");
+        //print("Whitespace");
         _setTextState("Fields Contain Whitespace");
       }
     } else {
-      print("Blank");
+      //print("Blank");
       _setTextState("Blank Fields");
     }
 
@@ -136,7 +125,6 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
 
-            //SizedBox(height: FrameHeight*0.2),
             SizedBox(height: FrameHeight*0.1),
 
             SizedBox(
@@ -200,8 +188,7 @@ class _MyHomePageState extends State<MyHomePage> {
             SizedBox(height: FrameHeight*0.1),
 
             ElevatedButton(
-
-              onPressed: _HomeScreen,
+              onPressed: _HomeScreen, //login method
               style: ElevatedButton.styleFrom(
                   fixedSize: Size(FrameWidth * 0.6, FrameHeight*0.1),
                   primary: Colors.blue,
@@ -217,7 +204,6 @@ class _MyHomePageState extends State<MyHomePage> {
             SizedBox(height: FrameHeight*0.05),
 
             ElevatedButton(
-
               onPressed: _BackToMenu,
               style: ElevatedButton.styleFrom(
                   fixedSize: Size(FrameWidth * 0.6, FrameHeight*0.1),

@@ -11,7 +11,10 @@ public class BookingDaoImpl {
     private final String TABLE_NAME = "booking";
     private final String TABLE_NAME2 = "users";
 
-    public void setup() throws SQLException {
+    /**
+     * Booking table setup
+     **/
+    public void setup() throws SQLException { //table setup
         try (Connection connection = Database.getConnection();
              Statement stmt = connection.createStatement();) {
             String sql = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + "(eventID INTEGER NOT NULL AUTO_INCREMENT, eventName VARCHAR(255) NOT NULL," +
@@ -22,8 +25,18 @@ public class BookingDaoImpl {
         }
     }
 
-//  createBooking() function
-//  Creates an entry in the MYSQL database and returns the new booking added
+    /**
+     * Creates an entry in the MYSQL database and returns the new booking added
+     * @param eventID id of booking, obsolete for now
+     * @param eventName type of event
+     * @param eventStart date event starts
+     * @param eventEnd time event ends
+     * @param eventDetails notes about booking
+     * @param userID ID of user making booking
+     * @param doctorName name of docker being booked
+     * @return Booking object of new booking
+     * @throws SQLException
+     */
     public Booking createBooking(Integer eventID, String eventName, String eventStart, String eventEnd, String eventDetails, Integer userID, String doctorName) throws SQLException {
 
         String sql = "INSERT INTO " + TABLE_NAME + "(eventName, eventStart, eventEnd, eventDetails, userID, doctorID) VALUES (?, ?, ?, ?, ?, ?)";
@@ -46,6 +59,11 @@ public class BookingDaoImpl {
         }
     }
 
+    /**
+     * Getting ID of doctor from database
+     * @param doctorname string of doctors name (full name)
+     * @return Integer of doctors ID, returns 0 id not found
+     **/
     private Integer getDoctorIDFromName(String doctorname) throws SQLException {
 
         String sql = "SELECT * FROM " + TABLE_NAME2 + " WHERE permission = ?";
@@ -69,6 +87,12 @@ public class BookingDaoImpl {
         }
     }
 
+    /**
+     * Removes booking from database
+     * @param eventID ID of booking on table
+     * @param userID ID of user removing booking
+     * @return true if successful, false otherwise
+     **/
     public boolean removeBooking(Integer eventID, Integer userID) throws SQLException{
         String sql = "DELETE * FROM " + TABLE_NAME + " WHERE eventID = ? AND userID = ?";
         try (Connection connection = Database.getConnection();
@@ -79,6 +103,11 @@ public class BookingDaoImpl {
         }
     }
 
+    /**
+     * Find all bookings given a doctors ID
+     * @param doctorID ID of booking on table
+     * @return ArrayList of strings containing all bookings with doctors ID
+     **/
     public ArrayList<String> getBookingList(Integer doctorID) throws SQLException{
         String sql = "SELECT * FROM " + TABLE_NAME + " WHERE doctorID = ?";
         ArrayList<String> BookingList = new ArrayList<String>();
@@ -102,7 +131,17 @@ public class BookingDaoImpl {
     }
 
 
-
+    /**
+     * Update bookings in database
+     * @param eventID ID of booking on table, not required
+     * @param eventName
+     * @param eventStart
+     * @param eventEnd
+     * @param eventDetails
+     * @param userID
+     * @param doctorID
+     * @return Booking object of new information
+     **/
     public Booking updateBooking(Integer eventID, String eventName, String eventStart, String eventEnd, String eventDetails, Integer userID, Integer doctorID) throws SQLException{
         String sql = "UPDATE " + TABLE_NAME + " SET eventName = ?, eventStart = ?, eventEnd = ?, eventDetails = ?, userID = ?, doctorID = ?";
         try (Connection connection = Database.getConnection();

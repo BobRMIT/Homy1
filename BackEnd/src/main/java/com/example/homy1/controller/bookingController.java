@@ -22,6 +22,11 @@ public class bookingController {
     private BookingDaoImpl bookingDao;
     private Booking booking;
 
+    /**
+     * Booking database setup
+     * @return String setup Complete
+     * @throws SQLException
+     */
     @RequestMapping("/")
     public String index() throws SQLException {
         bookingDao = new BookingDaoImpl();
@@ -30,6 +35,9 @@ public class bookingController {
 
     }
 
+    /**
+     * Creating booking endpoint, input json of Booking object
+    */
     @PostMapping(value = "/create", consumes = "application/json", produces =  "application/json")
     public ResponseEntity<User> createBooking(
             @RequestHeader(name = "X-COM-PERSIST", required = false) String headerPersist,
@@ -69,7 +77,9 @@ public class bookingController {
        return booking.toString();
     }*/
 
-
+    /**
+     * Updating booking from json
+     */
     @PostMapping(value = "/update", consumes = "application/json", produces =  "application/json")
     public ResponseEntity<User> updateBooking(
         @RequestHeader(name = "X-COM-PERSIST", required = false) String headerPersist,
@@ -92,6 +102,11 @@ public class bookingController {
             return ResponseEntity.created(location).build();
         }
 
+    /**
+     * Get list of all doctors in database
+     * @return ArrayList of all Doctors firstname and lastname
+     * @throws SQLException
+     */
     @GetMapping(value ="/getDoctors/", produces = "application/json")
     public ArrayList<String> getDoctors() throws SQLException{
         //System.out.print(bookingDao.getDoctorNames());
@@ -99,6 +114,12 @@ public class bookingController {
         return bookingDao.getDoctorNames();
     }
 
+    /**
+     * Get all bookings with specific doctor
+     * @param doctorsID integer of doctors ID
+     * @return returns ArrayList of strings containing information of bookings with given doctors ID
+     * @throws SQLException
+     */
     @GetMapping(value ="/GetBookingList/{doctorsID}", produces = "application/json")
     public ArrayList<String> getBooking(@PathVariable Integer doctorsID) throws SQLException{
         //System.out.print(bookingDao.getBookingList(doctorsID));

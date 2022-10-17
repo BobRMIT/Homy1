@@ -15,7 +15,7 @@
 * jira Board : https://bobrmit.atlassian.net/jira/software/projects/HOM/boards/1
 
 	
-## Code documentation - Release 0.3.1 - 10/10/2022
+## Code documentation - Release 0.3.1 - 18/10/2022
 * Login
 * Signup
 * Booking System

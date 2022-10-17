@@ -215,7 +215,7 @@ class _MyHomePageState extends State<MyHomePage> {
               });
             },
             buttonHeight: 40,
-            buttonWidth: 140,
+            buttonWidth: 400,
             itemHeight: 40,
           ),
         ),
@@ -263,11 +263,26 @@ class _MyHomePageState extends State<MyHomePage> {
               child: TextField(
 
                 controller: timeController, //editing controller of this TextField
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
 
                     icon: Icon(Icons.timer_rounded), //icon of text field
                     labelText: "Enter Time" //label text of field
                 ),
+                readOnly: true,
+                onTap: () async {
+                  var time = await showTimePicker(
+                    context: context,
+                    initialTime: TimeOfDay.now(),
+                  );
+                  if (time != null) {
+                    setState(() {
+                      // String formattedTime = DateFormat('hh:mm:ss').format(context); // format date in required form here we use yyyy-MM-dd that means time is removed
+                      timeController.text = time.format(context);
+                      // formattedTime; //set foratted date to TextField value.
+                    });
+                  }
+                },
+
               ),
             ),
           ),

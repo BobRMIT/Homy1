@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'LogInForm.dart' as loginForm;
 import 'package:http/http.dart' as http;
 import 'signupForm.dart' as signupForm;
+import 'AdminSignupForm.dart' as adminSignupForm;
 
 
 void main() {

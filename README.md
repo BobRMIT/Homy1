@@ -15,13 +15,10 @@
 * jira Board : https://bobrmit.atlassian.net/jira/software/projects/HOM/boards/1
 
 	
-## Code documentation - Release 0.2.1 - 10/10/2022
+## Code documentation - Release 0.3.1 - 10/10/2022
 * Login
 * Signup
-   	Usernames must be unique
-	Username and Password must not contain whitespaces
-	Database unit testing
-	Booking system functional
+* Booking System
 	
   
 

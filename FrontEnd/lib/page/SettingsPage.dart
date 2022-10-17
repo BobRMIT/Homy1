@@ -8,8 +8,8 @@ import 'package:localstorage/localstorage.dart';
 
 // add      --no-sound-null-safety
 
+///Logout function
 _BackToMenu(){
-  print("Back to menu screen");
   MainPage.main(); //Going back to menu
 }
 
@@ -22,7 +22,7 @@ class SettingsPage extends StatelessWidget{
   @override
   Widget build(BuildContext context) => Scaffold(
     appBar: AppBar(
-      title: Text('Settings User:${userInfo['id']}'),
+      title: Text('Settings User: ${userInfo['id']}'),
     ),
 
 
@@ -31,7 +31,7 @@ class SettingsPage extends StatelessWidget{
        //child: Text('Settings', style: TextStyle(fontSize: 60)),
       child: ElevatedButton(
 
-          onPressed: _BackToMenu,
+          onPressed: _BackToMenu, //logging out
               style: ElevatedButton.styleFrom(
               fixedSize: Size(120,40)),
           child: const Text('Logout'),

@@ -37,23 +37,30 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> BookingsList() async {
     LocalStorage storage = LocalStorage('key');
     Map<String, dynamic> userInfo = jsonDecode(storage.getItem('getID'));
-    print(userInfo['permission']);
+    //print(userInfo['permission']);
 
     if (userInfo['permission'] == 'Doctor') {
       final Data = await http.get(
-        Uri.parse("http://localhost:8080/booking/GetBookingList/${userInfo['id']}/"));
+        Uri.parse("http://localhost:8080/booking/GetBookingList/${userInfo['id']}/")); // getting all bookings for current doctor
         String info = Data.body.toString();
 
-        info = info.replaceAll(']','').replaceAll('[','').replaceAll(',','');
+        info = info.replaceAll(']','').replaceAll('[','').replaceAll(',',''); //convert json to usable list
+
+      if (info.isEmpty){
+        setState(() {
+          entries = ["No Bookings"];
+        });
+      }else {
         info = info.substring(1, info.length-1);
 
         setState(() {
-        entries = info.split('""');
+          entries = info.split('""');
         });
+      }
+
     }else{
-
+          // TODO later
     }
-
 
   }
 
@@ -92,7 +99,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   return Container(
                     height: 50,
 
-                    child: Center(child: Text('Booking: ${entries[index]}')),
+                    child: Center(child: Text('Booking: ${entries[index]}')), //Pasting all booking appointments
                   );
                 }
             )

@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'main.dart' as MainPage;
 import 'package:http/http.dart' as http;
 import 'HomePage.dart' as HomePage;
+import 'package:dropdown_button2/dropdown_button2.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -52,8 +54,9 @@ class _MyHomePageState extends State<MyHomePage> {
   final lastNameController = TextEditingController();
   final passwordController = TextEditingController();
   final errorTxtController = TextEditingController();
-  //final BoolCheck = BooleanController()
   Color selectionColor = Colors.red;
+
+
 
 
   String getUsername() {
@@ -97,70 +100,70 @@ class _MyHomePageState extends State<MyHomePage> {
     MainPage.main(); //Going back to menu
   }
 
-  bool VisChecking(status){
-    return !status;
-    //_isHidden = !_isHidden
-  }
-
-
-  /*
-  * Creating user function
-  * Error checks box inputs:
-  *         No text box can be empty
-  *         Username and Password cannot contain whitespace
-  *         Username sent to API to check if it already exists
-  * */
   Future<void> _SigningUp() async {
-    try {
-      if ((getUsername().isNotEmpty) && (getPassword().isNotEmpty) &&
-          (getFirstName().isNotEmpty) && (getLastName().isNotEmpty)) {
-        if (!getUsername().contains(' ')) {
-          if (!getPassword().contains(' ')) {
-            String username = getUsername();
-            final CheckUsername = await http.get(
-                Uri.parse("http://localhost:8080/users/check/$username/")); // checking if username already exists
-                //print(CheckUsername.body);
 
-            if (CheckUsername.body == "false") {
-                  //print("adding new user");
-              final response = await
-              http.post(
-                Uri.parse('http://localhost:8080/users/create/'),       // Creating user once if username is available
-                headers: <String, String>{                              // creating json to send to API
-                  'Content-Type': 'application/json; charset=UTF-8',
-                },
-                body: jsonEncode(<String, String>{
-                  'username': getUsername(),
-                  'password': getPassword(),
-                  'firstName': getFirstName(),
-                  'lastName': getLastName(),
-                  'permission': 'User'
-                }),
-              );
+    if ((getUsername().isNotEmpty) && (getPassword().isNotEmpty) && (getFirstName().isNotEmpty) && (getLastName().isNotEmpty)){
+      if (!getUsername().contains(' ')){
+        if (!getPassword().contains(' ')){
+          String username = getUsername();
+          final CheckUsername = await http.get(Uri.parse("http://localhost:8080/users/check/$username/"));
+          //print(CheckUsername.body);
 
-              if (response.statusCode == 201) {
-                _setTextStateSuc('Success');    //Created user if all clear
-              } else {
-                _setTextStateError("error: ${response.statusCode}"); //API functionality failed
-              }
+          if (CheckUsername.body == "false") {
+            print("adding new user");
+            final response = await
+            http.post(
+              Uri.parse('http://localhost:8080/users/create/'),
+              headers: <String, String>{
+                'Content-Type': 'application/json; charset=UTF-8',
+              },
+              body: jsonEncode(<String, String>{
+                'username': getUsername(),
+                'password': getPassword(),
+                'firstName': getFirstName(),
+                'lastName': getLastName(),
+                'permission': 'User'
+              }),
+            );
+
+            if (response.statusCode == 201) {
+              _setTextStateSuc('Success');
             } else {
-              _setTextStateError("Username Already Taken");
+              //print("error1");
+              //print(response.statusCode);
+              _setTextStateError("error: ${response.statusCode}");
             }
-          } else {
-            _setTextStateError("Password Contains Whitespace");
+          }else{
+            _setTextStateError("Username Already Taken");
           }
-        } else {
-          _setTextStateError("Username Contains Whitespace");
+        }else{
+          _setTextStateError("Password Contains Whitespace");
         }
-      } else {
-        _setTextStateError("Empty Fields");
+      }else{
+        _setTextStateError("Username Contains Whitespace");
       }
-    } on Exception catch (_) {
-      _setTextStateError("Failed to connect to API"); //API connection failed
-      //errorTxtController.text = "Failed to connect to API";
-      //throw Exception('Failed to connect to API');
+
+    }else{
+      _setTextStateError("Empty Fields");
     }
   }
+
+
+  _HomeScreen(){
+    //print("To home page");
+    HomePage.main();
+  }
+
+  final List<String> accountType = [
+    'User',
+    'Doctor',
+    'Admin',
+  ];
+
+  String? selectedValue;
+  // final bool readOnly = false;
+  // final f = new DateFormat('yyyy-MM-dd hh:mm'
+
 
 
 
@@ -195,12 +198,73 @@ class _MyHomePageState extends State<MyHomePage> {
         // in the middle of the parent.
         child: Column(
 
+
+
+          // Column is also a layout widget. It takes a list of children and
+          // arranges them vertically. By default, it sizes itself to fit its
+          // children horizontally, and tries to be as tall as its parent.
+          //
+          // Invoke "debug painting" (press "p" in the console, choose the
+          // "Toggle Debug Paint" action from the Flutter Inspector in Android
+          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
+          // to see the wireframe for each widget.
+          //
+          // Column has various properties to control how it sizes itself and
+          // how it positions its children. Here we use mainAxisAlignment to
+          // center the children vertically; the main axis here is the vertical
+          // axis because Columns are vertical (the cross axis would be
+          // horizontal).
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
 
-            //SizedBox(height: FrameHeight*0.2),
             SizedBox(height: FrameHeight*0.1),
+            DropdownButtonHideUnderline(
+              child: DropdownButton2(
+                hint: Text(
+                  'Select account type',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Theme
+                        .of(context)
+                        .hintColor,
+                  ),
+                ),
+                items: accountType
+                    .map((item) =>
+                    DropdownMenuItem<String>(
+                      value: item,
+                      child: Text(
+                        item,
+                        style: const TextStyle(
+                          fontSize: 14,
+                        ),
+                      ),
+                    ))
+                    .toList(),
+                value: selectedValue,
+                onChanged: (value) {
+                  setState(() {
+                    selectedValue = value as String;
+                  });
+                },
+                buttonHeight: 40,
+                buttonWidth: 400,
+                itemHeight: 40,
+              ),
+            ),
 
+            //SizedBox(height: FrameHeight*0.2),
+            // SizedBox(height: FrameHeight*0.1),
+
+            // TextFormField(
+            //   controller: usernameController,
+            //   keyboardType: TextInputType.emailAddress, // Use email input type for emails.
+            //   decoration: const InputDecoration(
+            //       contentPadding: EdgeInsets.symmetric(horizontal: 40.0),
+            //       hintText: 'Username',
+            //       labelText: 'Username'
+            //   ),
+            // ),
 
             Container(
               padding: const EdgeInsets.all(10),
@@ -231,31 +295,38 @@ class _MyHomePageState extends State<MyHomePage> {
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Username',
-                  prefixIcon: Icon(Icons.person),
+                    prefixIcon: Icon(Icons.person),
                 ),
               ),
             ),
+            // TextFormField(
+            //   controller: passwordController,
+            //   keyboardType: TextInputType.emailAddress, // Use email input type for emails.
+            //   decoration: const InputDecoration(
+            //       contentPadding: EdgeInsets.symmetric(horizontal: 40.0),
+            //       hintText: 'Password',
+            //       labelText: 'Password',
+            //   ),
+            // ),
 
             Container(
               padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
               child: TextField(
-                obscureText: _isHidden,
+                obscureText: true,
                 controller: passwordController,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Password',
                   hintText: 'Password',
-                  prefixIcon: const Icon(Icons.lock),
+                    prefixIcon: Icon(Icons.lock),
                   suffixIcon: IconButton(
                       icon: Icon(
-                          VisChecking(_isHidden) ?
-                          Icons.visibility_off : Icons.visibility  ),
+                          _isHidden
+                              ? Icons.visibility
+                              : Icons.visibility_off ),
                       onPressed: () {
-                        VisChecking(_isHidden);
                         setState(() {
-
-                          _isHidden = !VisChecking(_isHidden);
-
+                          _isHidden = !_isHidden;
                         });
                       }
                   ),
@@ -265,6 +336,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
 
             SizedBox(height: FrameHeight*0.05),
+
 
             Align( alignment: const Alignment(-0.9,-1),
               child:
@@ -298,9 +370,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
             ElevatedButton(
 
-              onPressed: _BackToMenu, // going back to menu
+              onPressed: _BackToMenu,
               style: ElevatedButton.styleFrom(
-                  fixedSize: Size(FrameWidth * 0.6, FrameHeight * 0.1),
+                  fixedSize: Size(FrameWidth * 0.6, FrameHeight*0.1),
                   primary: Colors.blue,
                   onPrimary: Colors.black,
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
@@ -317,4 +389,3 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
-

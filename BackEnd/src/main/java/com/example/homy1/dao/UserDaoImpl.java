@@ -15,6 +15,10 @@ public class UserDaoImpl{
 
     }
 
+    /**
+     * setting up users table
+     * @throws SQLException
+     */
     public void setup() throws SQLException {
         try (Connection connection = Database.getConnection();
              Statement stmt = connection.createStatement();) {
@@ -23,13 +27,20 @@ public class UserDaoImpl{
                     + "lastName VARCHAR(255) NOT NULL," + "permission VARCHAR(255) NOT NULL," + "PRIMARY KEY (id,username))";
             stmt.executeUpdate(sql);
 
-            sql = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME2 + "(id INTEGER NOT NULL AUTO_INCREMENT, username VARCHAR(255) NOT NULL UNIQUE," +
-                    "password VARCHAR(255) NOT NULL," + "firstName VARCHAR(255) NOT NULL,"
-                    + "lastName VARCHAR(255) NOT NULL," + "permission VARCHAR(255) NOT NULL," + "PRIMARY KEY (id,username))";
-            //stmt.executeUpdate(sql);
         }
     }
 
+    /**
+     * Create user and input it into database
+     * @param id id of new user, not needed
+     * @param firstName first name of new user
+     * @param lastName last name of new user
+     * @param username username of new user
+     * @param password password of new user
+     * @param permission permission of new user
+     * @return returns newly created User object
+     * @throws SQLException
+     */
     public User createUser(Integer id, String firstName, String lastName, String username, String password, String permission) throws SQLException {
         String sql = "INSERT INTO " + TABLE_NAME + " (username, password, firstName, lastName, permission) VALUES (?, ?, ?, ?, ?)";
         try (Connection connection = Database.getConnection();
@@ -47,6 +58,13 @@ public class UserDaoImpl{
         }
     }
 
+    /**
+     * Searcher for user in database using username and password
+     * @param username username of desired user
+     * @param password password of desired user
+     * @return User object of user after if found in the database, if not found, null is returned
+     * @throws SQLException
+     */
     public User getUser(String username, String password) throws SQLException {
         String sql = "SELECT * FROM " + TABLE_NAME + " WHERE username = ? AND password = ?";
         try (Connection connection = Database.getConnection();
@@ -71,6 +89,16 @@ public class UserDaoImpl{
         }
     }
 
+    /**
+     * Updating user, unused
+     * @param firstName
+     * @param lastName
+     * @param username
+     * @param password
+     * @param permission
+     * @return returns null if user is not found, returns new user object with updates
+     * @throws SQLException
+     */
     public User updateUser(String firstName, String lastName, String username, String password, String permission) throws SQLException{
         String sql = "UPDATE " + TABLE_NAME + " SET firstName = ?, lastName = ? WHERE username = ?";
         try (Connection connection = Database.getConnection();
@@ -94,6 +122,13 @@ public class UserDaoImpl{
         }
     }
 
+    /**
+     * Removes user in tables given username and password
+     * @param username username of desired user
+     * @param password password of desired user
+     * @return true if sql command runs
+     * @throws SQLException
+     */
     public boolean removeUser(String username, String password) throws SQLException{
         String sql = "DELETE FROM " + TABLE_NAME + " WHERE username = ? AND password = ?";
         try (Connection connection = Database.getConnection();
@@ -105,6 +140,11 @@ public class UserDaoImpl{
         return true;
     }
 
+    /**
+     * Get count of user database entries, for ID
+     * @return Returns integer count, 0 if none found
+     * @throws SQLException
+     */
     public Integer getCount() throws SQLException{
         String sql = "SELECT COUNT(*) FROM users";
         try (Connection connection = Database.getConnection();
@@ -115,13 +155,18 @@ public class UserDaoImpl{
             }
         }
         return 0;
-
     }
 
     public User listUsers(){
         return null;
     }
 
+    /**
+     * Finds id username already exists in user table
+     * @param username username string to check for in database
+     * @return true if username exists, false if it does not exist
+     * @throws SQLException
+     */
     public boolean CheckUsername(String username) throws SQLException{
         String sql = "SELECT * FROM " + TABLE_NAME + " WHERE username = ?";
         try (Connection connection = Database.getConnection();
@@ -135,6 +180,5 @@ public class UserDaoImpl{
                 return false;
             }
         }
-
     }
 }

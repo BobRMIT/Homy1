@@ -1,25 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
-// class HomePage extends StatelessWidget{
-//   @override
-//   Widget build(BuildContext context) => Scaffold(
-//     appBar: AppBar(
-//       title: Text('Homepage'),
-//     ),
-//     body: Center(child: Text('Home', style: TextStyle(fontSize: 60),)),
-//   );
-// }
+
 
 class HomePage extends StatelessWidget{
 
   TextEditingController _appointmentController = TextEditingController();
 
-  // @override
-  // void dispose(){ // it means when the page is killed the event controller should stop
-  //   _appointmentController.dispose();
-  //   super.dispose();
-  // }
+
 
   @override
   Widget build(BuildContext context) => Scaffold(

@@ -161,6 +161,14 @@ class _MyHomePageState extends State<MyHomePage> {
     var FrameWidth = MediaQuery.of(context).size.width;
     var FrameHeight = MediaQuery.of(context).size.width;
 
+    bool _isHidden = true;
+
+    // void _togglePasswordView() {
+    //   setState(() {
+    //     _isHidden = !_isHidden;
+    //   });
+    // }
+
 
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
@@ -223,6 +231,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'First name',
+                  prefixIcon: Icon(Icons.person),
                 ),
               ),
             ),
@@ -233,6 +242,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Last name',
+                  prefixIcon: Icon(Icons.person),
                 ),
               ),
             ),
@@ -243,6 +253,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Username',
+                  prefixIcon: Icon(Icons.person),
                 ),
               ),
             ),
@@ -259,12 +270,24 @@ class _MyHomePageState extends State<MyHomePage> {
             Container(
               padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
               child: TextField(
-                obscureText: true,
+                obscureText: _isHidden,
                 controller: passwordController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
+                decoration: InputDecoration(
+                  border: const OutlineInputBorder(),
                   labelText: 'Password',
                   hintText: 'Password',
+                  prefixIcon: const Icon(Icons.lock),
+                    suffixIcon: IconButton(
+                        icon: Icon(
+                            _isHidden
+                                ? Icons.visibility
+                                : Icons.visibility_off ),
+                        onPressed: () {
+                          setState(() {
+                            _isHidden = !_isHidden;
+                          });
+                        }
+                        ),
                 ),
               ),
             ),

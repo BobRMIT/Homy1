@@ -121,6 +121,8 @@ class _MyHomePageState extends State<MyHomePage> {
     var FrameWidth = MediaQuery.of(context).size.width;
     var FrameHeight = MediaQuery.of(context).size.width;
 
+    bool _isHidden = true;
+
     return Scaffold(
 
 
@@ -145,9 +147,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 keyboardType: TextInputType.emailAddress, // Use email input type for emails.
                 decoration: InputDecoration(
                     border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    contentPadding: const EdgeInsets.all(10),
                     hintText: 'Username',
-                    labelText: 'Username'
+                    labelText: 'Username',
+                  prefixIcon: const Icon(Icons.person),
                 ),
               ),
             ),
@@ -162,9 +165,21 @@ class _MyHomePageState extends State<MyHomePage> {
                 keyboardType: TextInputType.emailAddress, // Use email input type for emails.
                 decoration: InputDecoration(
                     border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                    contentPadding: EdgeInsets.symmetric(horizontal: 20.0),
+                    contentPadding: const EdgeInsets.all(10),
                     hintText: 'Password',
-                    labelText: 'Password'
+                    labelText: 'Password',
+                  prefixIcon: const Icon(Icons.lock),
+                  suffixIcon: IconButton(
+                      icon: Icon(
+                          _isHidden
+                              ? Icons.visibility
+                              : Icons.visibility_off ),
+                      onPressed: () {
+                        setState(() {
+                          _isHidden = !_isHidden;
+                        });
+                      }
+                  ),
                 ),
               ),
 

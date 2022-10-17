@@ -173,6 +173,8 @@ class _MyHomePageState extends State<MyHomePage> {
     var FrameWidth = MediaQuery.of(context).size.width;
     var FrameHeight = MediaQuery.of(context).size.width;
 
+    bool _isHidden = true;
+
 
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
@@ -246,7 +248,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   });
                 },
                 buttonHeight: 40,
-                buttonWidth: 190,
+                buttonWidth: 400,
                 itemHeight: 40,
               ),
             ),
@@ -271,6 +273,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'First name',
+                  prefixIcon: Icon(Icons.person),
                 ),
               ),
             ),
@@ -281,6 +284,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Last name',
+                  prefixIcon: Icon(Icons.person),
                 ),
               ),
             ),
@@ -291,6 +295,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Username',
+                    prefixIcon: Icon(Icons.person),
                 ),
               ),
             ),
@@ -309,10 +314,22 @@ class _MyHomePageState extends State<MyHomePage> {
               child: TextField(
                 obscureText: true,
                 controller: passwordController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Password',
                   hintText: 'Password',
+                    prefixIcon: Icon(Icons.lock),
+                  suffixIcon: IconButton(
+                      icon: Icon(
+                          _isHidden
+                              ? Icons.visibility
+                              : Icons.visibility_off ),
+                      onPressed: () {
+                        setState(() {
+                          _isHidden = !_isHidden;
+                        });
+                      }
+                  ),
                 ),
               ),
             ),

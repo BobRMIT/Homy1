@@ -145,7 +145,7 @@ class _MyHomePageState extends State<MyHomePage> {
               });
             },
             buttonHeight: 40,
-            buttonWidth: 140,
+            buttonWidth: 400,
             itemHeight: 40,
           ),
         ),

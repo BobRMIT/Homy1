@@ -106,7 +106,7 @@ public class userController {
     }
 
     /**
-     * TBA
+     * POST Mapping Search function
      * @param username
      * @param password
      * @return

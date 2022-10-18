@@ -7,7 +7,7 @@ import java.util.Properties;
 
 public class Database {
     static String username = "root";
-    static String password = "Password1";
+        static String password = "password";
 
     private static final String DB_URL = "jdbc:mysql://localhost:3306/homy1";
 
